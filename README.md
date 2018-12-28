@@ -64,7 +64,7 @@ public void ConfigureServices(IServiceCollection services)
  public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
  {
      app.UseCronQuery()
-      .Enqueue<MyFirstJob>()  // Order matters
+      .Enqueue<MyFirstJob>()
       .Enqueue<MySecondJob>()
       .Enqueue<MyThirdJob>()
       .StartWith(appLifetime);
