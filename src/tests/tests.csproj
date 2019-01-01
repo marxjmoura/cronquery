@@ -11,4 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\lib\lib.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="MiniCover" Version="2.0.0-ci-20181108093139" />
+  </ItemGroup>
 </Project>

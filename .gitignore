@@ -30,6 +30,7 @@ wwwroot/
 Properties/
 Settings/
 TestResults/
+coverage-html/
 ###################
 # Web publish log #
 ###################
@@ -59,7 +60,7 @@ TestResults/
 *.sqlite
 clover.xml
 codecov
-coverage-hits.txt
+coverage.hits
 coverage.json
 ######################
 # OS generated files #
