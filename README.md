@@ -23,22 +23,8 @@ dotnet add package CronQuery
 
 ## Creating a job
 
-Synchronous job:
-
 ```c#
 public class MyJob : IJob
-{
-    public void Run()
-    {
-        // Do your magic
-    }
-}
-```
-
-Asynchronous job:
-
-```c#
-public class MyJobAsync : IJobAsync
 {
     public async Task RunAsync()
     {
@@ -54,7 +40,7 @@ Jobs are registered in the app's `Startup` class:
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddCronQuery();
+    services.AddCronQuery(Configuration.GetSection("CronQuery"));
 
     services.AddTransient<MyFirstJob>();
     services.AddTransient<MySecondJob>();
@@ -112,15 +98,6 @@ Save the configuration in your `appsettings.json` like the example below:
 ```
 
 > Whenever you save the `appsettings.json` CronQuery immediately assumes the new configuration.
-
-Then apply the configuration in the app's `Startup.ConfigureServices` method:
-
-```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddCronQuery(options => Configuration.GetSection("CronQuery").Bind(options));
-}
-```
 
 ## Contact us
 
