@@ -1,5 +1,5 @@
 version : 2
-defaults:
+default: &default
   machine:
     image: circleci/classic:latest
 commands:
@@ -12,6 +12,7 @@ commands:
       - run: sudo apt-get install dotnet-sdk-2.1
 jobs:
   test:
+    <<: *default
     steps:
       - checkout
       - install_dotnet
@@ -25,11 +26,12 @@ jobs:
       - run: chmod +x ./src/codecov
       - run: ./src/codecov -f "./src/clover.xml" -t $CODECOV_TOKEN
   deploy:
+    <<: *default
     steps:
       - checkout
       - install_dotnet
       - run: dotnet pack src/lib/lib.csproj -o publish
-      - reu: nuget push src/lib/publish/CronQuery.*.nupkg $NUGET_TOKEN
+      - run: nuget push src/lib/publish/CronQuery.*.nupkg $NUGET_TOKEN
 workflows:
   version: 2
   test_and_deploy:
