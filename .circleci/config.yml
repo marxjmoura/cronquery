@@ -1,4 +1,4 @@
-version : 2
+version : 2.1
 default: &default
   machine:
     image: circleci/classic:latest
