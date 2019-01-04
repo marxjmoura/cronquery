@@ -91,26 +91,23 @@ namespace CronQuery.Extensions
 
         public static int Get(this DateTime dateTime, TimeUnit timeUnit)
         {
-            if (timeUnit.IsSecond) return dateTime.Second;
-            if (timeUnit.IsMinute) return dateTime.Minute;
-            if (timeUnit.IsHour) return dateTime.Hour;
-            if (timeUnit.IsDay) return dateTime.Day;
-            if (timeUnit.IsMonth) return dateTime.Month;
             if (timeUnit.IsDayOfWeek) return (int)dateTime.DayOfWeek;
+            if (timeUnit.IsMonth) return dateTime.Month;
+            if (timeUnit.IsDay) return dateTime.Day;
+            if (timeUnit.IsHour) return dateTime.Hour;
+            if (timeUnit.IsMinute) return dateTime.Minute;
 
-            throw new ArgumentException("Time unit does not specify granularity.", "timeUnit");
+            return dateTime.Second;
         }
 
         public static DateTime Set(this DateTime dateTime, TimeUnit timeUnit, int value)
         {
-            if (timeUnit.IsSecond) return dateTime.Set(second: value);
-            if (timeUnit.IsMinute) return dateTime.Set(minute: value);
-            if (timeUnit.IsHour) return dateTime.Set(hour: value);
-            if (timeUnit.IsDay) return dateTime.Set(day: value);
             if (timeUnit.IsMonth) return dateTime.Set(month: value);
-            if (timeUnit.IsDayOfWeek) return dateTime.Next((DayOfWeek)value);
+            if (timeUnit.IsDay) return dateTime.Set(day: value);
+            if (timeUnit.IsHour) return dateTime.Set(hour: value);
+            if (timeUnit.IsMinute) return dateTime.Set(minute: value);
 
-            throw new ArgumentException("Time unit does not specify granularity.", "timeUnit");
+            return dateTime.Set(second: value);
         }
 
         public static DateTime Set(this DateTime dateTime,
