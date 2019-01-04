@@ -5,7 +5,6 @@ default: &default
 commands:
   install_dotnet:
     steps:
-      - run: cat /etc/os-release
       - run: wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
       - run: sudo dpkg -i packages-microsoft-prod.deb
       - run: sudo apt-get install apt-transport-https
@@ -23,10 +22,14 @@ jobs:
       - run: cd src/tests && dotnet minicover reset
       - run: cd src/tests && for project in tests.csproj; do dotnet test $project --no-build; done
       - run: cd src/tests && dotnet minicover uninstrument --workdir ../
+      - run: cd src/tests && dotnet minicover htmlreport --workdir ../
       - run: cd src/tests && dotnet minicover cloverreport --workdir ../
       - run: curl -s https://codecov.io/bash > ./src/codecov
       - run: chmod +x ./src/codecov
       - run: ./src/codecov -f "./src/clover.xml" -t $CODECOV_TOKEN
+      - store_artifacts:
+          path: src/coverage-html
+          destination: coverage
   deploy:
     <<: *default
     steps:
@@ -35,7 +38,7 @@ jobs:
       - run: dotnet pack src/lib/lib.csproj -o publish
       - run: nuget push src/lib/publish/CronQuery.*.nupkg $NUGET_TOKEN
 workflows:
-  version: 2
+  version: 2.1
   test_and_deploy:
     jobs:
       - test
