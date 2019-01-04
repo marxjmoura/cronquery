@@ -85,6 +85,11 @@ namespace CronQuery.Cron
 
                 time = _day.Next(time);
 
+                if (!_dayOfWeek.Matches(time))
+                {
+                    time = _dayOfWeek.Next(time);
+                }
+
                 if (time <= query || !_month.Matches(time))
                 {
                     time = _day.Reset(time);
