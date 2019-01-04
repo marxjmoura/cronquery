@@ -5,6 +5,7 @@
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
     "**/.vs": true,
+    "**/.vscode.default": true,
     "**/bin": true,
     "**/obj": true,
     "**/Properties": true,

@@ -31,6 +31,7 @@ Properties/
 Settings/
 TestResults/
 coverage-html/
+.vscode/
 ###################
 # Web publish log #
 ###################
