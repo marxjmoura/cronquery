@@ -23,7 +23,7 @@
 
 namespace CronQuery.Cron
 {
-    internal class TimeUnit
+    internal sealed class TimeUnit
     {
         private TimeUnit(int minValue, int maxValue)
         {

@@ -29,7 +29,7 @@ using CronQuery.Extensions;
 
 namespace CronQuery.Cron
 {
-    internal class CronValue
+    internal sealed class CronValue
     {
         const int NoValue = -1;
 

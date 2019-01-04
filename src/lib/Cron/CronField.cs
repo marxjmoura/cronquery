@@ -28,7 +28,7 @@ using CronQuery.Extensions;
 
 namespace CronQuery.Cron
 {
-    internal class CronField
+    internal sealed class CronField
     {
         private readonly TimeUnit _timeUnit;
 

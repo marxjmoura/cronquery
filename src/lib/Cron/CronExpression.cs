@@ -27,7 +27,7 @@ using CronQuery.Extensions;
 
 namespace CronQuery.Cron
 {
-    public class CronExpression
+    public sealed class CronExpression
     {
         private readonly CronField _second;
         private readonly CronField _minute;

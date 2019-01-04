@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace CronQuery.Cron
 {
-    internal class CronSyntax
+    internal sealed class CronSyntax
     {
         const string Asterisk = @"^\*$"; // Matches: *
         const string Dash = @"^\d{1,2}-\d{1,2}$"; // Matches: 00-00
