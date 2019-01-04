@@ -139,12 +139,7 @@ namespace CronQuery.Cron
                 return dateTime.Last(daysBefore: cron.Values.Single()); // Expression is L-[1-31]
             }
 
-            if (_timeUnit.IsDayOfWeek)
-            {
-                return dateTime.Last().Previous((DayOfWeek)cron.Values.Single()); // Expression is L or [0-6]L
-            }
-
-            return dateTime;
+            return dateTime.Last().Previous((DayOfWeek)cron.Values.Single()); // Expression is L or [0-6]L
         }
 
         private DateTime NearestWeekday(DateTime dateTime)
