@@ -21,41 +21,16 @@
  * SOFTWARE.
  */
 
-using CronQuery.Mvc.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using tests.Mvc.Jobs;
+using System.Threading.Tasks;
+using CronQuery.Mvc.Jobs;
 
-namespace tests.Mvc.Fakes
+namespace tests.Fakes.Jobs
 {
-    public class StartupFake
+    public class JobNotConfigured : IJob
     {
-        public StartupFake(IConfiguration configuration)
+        public Task RunAsync()
         {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCronQuery(Configuration.GetSection("CronQuery"));
-
-            services.AddSingleton<ILoggerFactory, LoggerFactoryFake>();
-
-            services.AddSingleton<JobWithError>();
-            services.AddSingleton<JobSuccessful>();
-        }
-
-        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
-        {
-            app.UseCronQuery()
-                .Enqueue<JobSuccessful>()
-                .Enqueue<JobWithError>()
-                .StartWith(appLifetime);
+            return Task.CompletedTask;
         }
     }
 }

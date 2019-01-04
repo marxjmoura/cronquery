@@ -21,32 +21,36 @@
  * SOFTWARE.
  */
 
-using System;
-using CronQuery.Cron;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.TestHost;
+using tests.Fakes;
+using tests.Fakes.Jobs;
 using Xunit;
 
-namespace tests.Cron
+namespace tests.Functional
 {
-    public class UnreachableConditionTest
+    public class AppTest
     {
-        [Fact]
-        public void ShouldNotEvaluateNearestWeekdayOnlyOnSunday()
-        {
-            var expression = new CronExpression("0 0 8 15W * 0");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+        private TestServer _server;
 
-            Assert.Equal(expected, expression.Next(current));
+        public AppTest()
+        {
+            _server = new TestServer(Program.CreateWebHostBuilder());
         }
 
         [Fact]
-        public void ShouldNotEvaluateOnlyMonthsThatNotReachTheGivenDay()
+        public async Task Run()
         {
-            var expression = new CronExpression("0 0 8 31 2,4,6 *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+            await Task.Delay(1500); // Waiting for jobs
 
-            Assert.Equal(expected, expression.Next(current));
+            Assert.True(_server.Job<JobSuccessful>().Executed);
+            Assert.False(_server.Job<JobStopped>().Executed);
+
+            Assert.Contains(_server.Logger().Messages, message =>
+                message == $"Job '{nameof(JobWithError)}' failed during running.");
+
+            Assert.Contains(_server.Logger().Messages, message =>
+                message == $"No job configuration matches '{nameof(JobNotConfigured)}'.");
         }
     }
 }

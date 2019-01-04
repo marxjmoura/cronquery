@@ -25,56 +25,76 @@ using System;
 using CronQuery.Cron;
 using Xunit;
 
-namespace tests.Cron
+namespace tests.Unit.Cron
 {
-    public class ExpressionWithAsteriskTest
+    public class ExpressionWithSlashTest
     {
         [Fact]
         public void ShouldGetNextSecond()
         {
-            var expression = new CronExpression("* * * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 30, 20);
-            var expected = new DateTime(2018, 12, 30, 08, 30, 21);
+            var expression = new CronExpression("*/10 * * * * *");
+            var current = new DateTime(2018, 12, 30, 08, 15, 20);
+            var expected = new DateTime(2018, 12, 30, 08, 15, 30);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextMinute()
+        public void ShouldGetNextMinuteAfterLastSecond()
         {
-            var expression = new CronExpression("* * * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 30, 59);
-            var expected = new DateTime(2018, 12, 30, 08, 31, 00);
+            var expression = new CronExpression("*/10 * * * * *");
+            var current = new DateTime(2018, 12, 30, 08, 15, 50);
+            var expected = new DateTime(2018, 12, 30, 08, 16, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextHour()
+        public void ShouldGetNextHourAfterLastMinute()
         {
-            var expression = new CronExpression("* * * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 59, 59);
+            var expression = new CronExpression("* */10 * * * *");
+            var current = new DateTime(2018, 12, 30, 08, 50, 59);
             var expected = new DateTime(2018, 12, 30, 09, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextDay()
+        public void ShouldGetNextDayAfterLastHour()
         {
-            var expression = new CronExpression("* * * * * *");
-            var current = new DateTime(2018, 12, 30, 23, 59, 59);
+            var expression = new CronExpression("* * */10 * * *");
+            var current = new DateTime(2018, 12, 30, 20, 59, 59);
             var expected = new DateTime(2018, 12, 31, 00, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextMonth()
+        public void ShouldGetNextMonthAfterLastDay()
         {
-            var expression = new CronExpression("* * * * * *");
-            var current = new DateTime(2018, 12, 31, 23, 59, 59);
+            var expression = new CronExpression("* * * */7 * *");
+            var current = new DateTime(2018, 12, 29, 23, 59, 59);
             var expected = new DateTime(2019, 01, 01, 00, 00, 00);
+
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldGetNextYearAfterLastMonth()
+        {
+            var expression = new CronExpression("* * * * */6 *");
+            var current = new DateTime(2018, 07, 31, 23, 59, 59);
+            var expected = new DateTime(2019, 01, 01, 00, 00, 00);
+
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldGetNextDayOfWeek()
+        {
+            var expression = new CronExpression("* * * * * */2");
+            var current = new DateTime(2018, 12, 25, 23, 59, 59);
+            var expected = new DateTime(2018, 12, 27, 00, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }

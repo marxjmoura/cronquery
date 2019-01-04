@@ -21,24 +21,25 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using tests.Mvc.Jobs;
-using tests.Mvc.Fakes;
-using Xunit;
+using System;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
-namespace tests.Mvc
+namespace tests.Functional
 {
-    public class JobRunnerTest
+    public class Program
     {
-        [Fact]
-        public async Task ShouldRun()
-        {
-            var server = new ServerFake();
+        public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
+            .UseStartup<Startup>()
+            .UseEnvironment("Testing")
+            .ConfigureAppConfiguration((builderContext, config) =>
+            {
+                var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
+                var root = AppContext.BaseDirectory.Replace(build, string.Empty);
+                var appsettings = Path.Combine(root, "Functional", "appsettings.json");
 
-            await Task.Delay(1500); // Waiting for jobs
-
-            Assert.True(server.Job<JobSuccessful>().Executed);
-            Assert.Contains(server.Logger.Messages, message => message == $"Job {nameof(JobWithError)} failed during running.");
-        }
+                config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
+            });
     }
 }

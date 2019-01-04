@@ -21,32 +21,19 @@
  * SOFTWARE.
  */
 
-using System;
-using CronQuery.Cron;
-using Xunit;
+using CronQuery.Mvc.Jobs;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace tests.Cron
+namespace tests.Fakes
 {
-    public class ExpressionWithHashTest
+    public static class TestServerExtensions
     {
-        [Fact]
-        public void ShouldGetNextDayOfWeekInTheSameMonth()
-        {
-            var expression = new CronExpression("* * * * * 1#3");
-            var current = new DateTime(2018, 12, 01, 23, 59, 59);
-            var expected = new DateTime(2018, 12, 17, 00, 00, 00);
+        public static LoggerFake Logger(this TestServer server) =>
+            server.Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger(string.Empty) as LoggerFake;
 
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldGetNextDayOfWeekInTheNextMonth()
-        {
-            var expression = new CronExpression("* * * * * 1#3");
-            var current = new DateTime(2018, 12, 25, 23, 59, 59);
-            var expected = new DateTime(2019, 01, 21, 00, 00, 00);
-
-            Assert.Equal(expected, expression.Next(current));
-        }
+        public static TJob Job<TJob>(this TestServer server) where TJob : IJob =>
+            server.Host.Services.GetRequiredService<TJob>();
     }
 }

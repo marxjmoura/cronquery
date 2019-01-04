@@ -21,34 +21,46 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using CronQuery.Mvc.Jobs;
+using CronQuery.Mvc.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using tests.Fakes;
+using tests.Fakes.Jobs;
 
-namespace tests.Mvc.Fakes
+namespace tests.Functional
 {
-    public class ServerFake : TestServer
+    public class Startup
     {
-        public ServerFake() : base(WebHostBuilder()) { }
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
-        public LoggerFake Logger => Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger(string.Empty) as LoggerFake;
-        public TJob Job<TJob>() where TJob : IJob => Host.Services.GetRequiredService<TJob>();
+        public IConfiguration Configuration { get; }
 
-        private static IWebHostBuilder WebHostBuilder() => new WebHostBuilder()
-            .UseStartup<StartupFake>()
-            .UseEnvironment("Testing")
-            .ConfigureAppConfiguration((builderContext, config) =>
-            {
-                var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
-                var root = AppContext.BaseDirectory.Replace(build, string.Empty);
-                var appsettings = Path.Combine(root, "Mvc", "appsettings.json");
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddCronQuery(Configuration.GetSection("CronQuery"));
 
-                config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
-            });
+            services.AddSingleton<ILoggerFactory, LoggerFactoryFake>();
+
+            services.AddSingleton<JobSuccessful>();
+            services.AddSingleton<JobWithError>();
+            services.AddSingleton<JobNotConfigured>();
+            services.AddSingleton<JobStopped>();
+        }
+
+        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
+        {
+            app.UseCronQuery()
+                .Enqueue<JobSuccessful>()
+                .Enqueue<JobWithError>()
+                .Enqueue<JobNotConfigured>()
+                .Enqueue<JobStopped>()
+                .StartWith(appLifetime);
+        }
     }
 }

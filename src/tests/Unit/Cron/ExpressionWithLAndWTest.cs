@@ -25,69 +25,66 @@ using System;
 using CronQuery.Cron;
 using Xunit;
 
-namespace tests.Cron
+namespace tests.Unit.Cron
 {
-    public class InvalidExpressionTest
+    public class ExpressionWithLAndWTest
     {
         [Fact]
-        public void ShouldNotEvaluateLowerThan6Fields()
+        public void ShouldGetNearestWeekdayFromWeekday()
         {
-            var expression = new CronExpression("* * * * *");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
-
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldNotEvaluateMoreThan6Fields()
-        {
-            var expression = new CronExpression("* * * * * * *");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
-
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldNotEvaluateInvalidExpression()
-        {
-            var expression = new CronExpression("IN V A L I D");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
-
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldIgnoreSecondOutOfRange()
-        {
-            var expression = new CronExpression("99 * * * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = new DateTime(2019, 01, 01, 00, 00, 59);
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2018, 12, 01, 08, 00, 00);
+            var expected = new DateTime(2018, 12, 31, 00, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldIgnoreIncrementByZero()
+        public void ShouldGetNextMonthNearestWeekdayFromWeekday()
         {
-            var expression = new CronExpression("*/0 * * * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = new DateTime(2019, 01, 01, 00, 00, 01);
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2019, 01, 31, 23, 59, 59);
+            var expected = new DateTime(2019, 02, 28, 00, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldIgnoreCharacterNotAllowed()
+        public void ShouldGetNearestWeekdayFromSaturday()
         {
-            var expression = new CronExpression("* * 10#5 * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2019, 08, 01, 08, 00, 00);
+            var expected = new DateTime(2019, 08, 30, 00, 00, 00);
+
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldGetNextMonthNearestWeekdayFromSaturday()
+        {
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2019, 08, 30, 23, 59, 59);
+            var expected = new DateTime(2019, 09, 30, 00, 00, 00);
+
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldGetNearestWeekdayFromSunday()
+        {
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2019, 03, 01, 08, 00, 00);
+            var expected = new DateTime(2019, 03, 29, 00, 00, 00);
+
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldGetNextMonthNearestWeekdayFromSunday()
+        {
+            var expression = new CronExpression("* * * LW * *");
+            var current = new DateTime(2019, 03, 29, 23, 59, 59);
+            var expected = new DateTime(2019, 04, 30, 00, 00, 00);
 
             Assert.Equal(expected, expression.Next(current));
         }

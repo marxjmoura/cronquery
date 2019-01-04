@@ -25,7 +25,7 @@ using System;
 using CronQuery.Cron;
 using Xunit;
 
-namespace tests.Cron
+namespace tests.Unit.Cron
 {
     public class ExpressionWithWTest
     {

@@ -21,26 +21,32 @@
  * SOFTWARE.
  */
 
-using Microsoft.Extensions.Logging;
+using System;
+using CronQuery.Cron;
+using Xunit;
 
-namespace tests.Mvc.Fakes
+namespace tests.Unit.Cron
 {
-    public class LoggerFactoryFake : ILoggerFactory
+    public class UnreachableConditionTest
     {
-        private static ILogger _logger;
-
-        public void AddProvider(ILoggerProvider provider) { }
-
-        public ILogger CreateLogger(string categoryName)
+        [Fact]
+        public void ShouldNotEvaluateNearestWeekdayOnlyOnSunday()
         {
-            if (_logger == null)
-            {
-                _logger = new LoggerFake();
-            }
+            var expression = new CronExpression("0 0 8 15W * 0");
+            var current = new DateTime(2019, 01, 01, 00, 00, 00);
+            var expected = DateTime.MinValue;
 
-            return _logger;
+            Assert.Equal(expected, expression.Next(current));
         }
 
-        public void Dispose() { }
+        [Fact]
+        public void ShouldNotEvaluateOnlyMonthsThatNotReachTheGivenDay()
+        {
+            var expression = new CronExpression("0 0 8 31 2,4,6 *");
+            var current = new DateTime(2019, 01, 01, 00, 00, 00);
+            var expected = DateTime.MinValue;
+
+            Assert.Equal(expected, expression.Next(current));
+        }
     }
 }

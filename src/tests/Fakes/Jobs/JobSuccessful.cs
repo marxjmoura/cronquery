@@ -25,7 +25,7 @@ using System;
 using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
 
-namespace tests.Mvc.Jobs
+namespace tests.Fakes.Jobs
 {
     public class JobSuccessful : IJob, IDisposable
     {

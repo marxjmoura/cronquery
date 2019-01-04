@@ -25,12 +25,10 @@ using System;
 using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
 
-namespace tests.Mvc.Jobs
+namespace tests.Fakes.Jobs
 {
-    public class JobWithError : IJob, IDisposable
+    public class JobWithError : IJob
     {
-        public void Dispose() { }
-
         public Task RunAsync()
         {
             throw new NotImplementedException();

@@ -25,56 +25,69 @@ using System;
 using CronQuery.Cron;
 using Xunit;
 
-namespace tests.Cron
+namespace tests.Unit.Cron
 {
-    public class ExpressionWithCommaTest
+    public class InvalidExpressionTest
     {
         [Fact]
-        public void ShouldGetNextMinute()
+        public void ShouldNotEvaluateLowerThan6Fields()
         {
-            var expression = new CronExpression("10,20,30 * * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 30, 10);
-            var expected = new DateTime(2018, 12, 30, 08, 30, 20);
+            var expression = new CronExpression("* * * * *");
+            var current = DateTime.UtcNow;
+            var expected = DateTime.MinValue;
+
+            Assert.False(expression.IsValid);
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldNotEvaluateMoreThan6Fields()
+        {
+            var expression = new CronExpression("* * * * * * *");
+            var current = DateTime.UtcNow;
+            var expected = DateTime.MinValue;
+
+            Assert.False(expression.IsValid);
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldNotEvaluateInvalidExpression()
+        {
+            var expression = new CronExpression("IN V A L I D");
+            var current = DateTime.UtcNow;
+            var expected = DateTime.MinValue;
+
+            Assert.False(expression.IsValid);
+            Assert.Equal(expected, expression.Next(current));
+        }
+
+        [Fact]
+        public void ShouldIgnoreSecondOutOfRange()
+        {
+            var expression = new CronExpression("99 * * * * *");
+            var current = new DateTime(2019, 01, 01, 00, 00, 00);
+            var expected = new DateTime(2019, 01, 01, 00, 00, 59);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextMinuteAfterLastSecond()
+        public void ShouldIgnoreIncrementByZero()
         {
-            var expression = new CronExpression("10,20,30 * * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 30, 30);
-            var expected = new DateTime(2018, 12, 30, 08, 31, 10);
+            var expression = new CronExpression("*/0 * * * * *");
+            var current = new DateTime(2019, 01, 01, 00, 00, 00);
+            var expected = new DateTime(2019, 01, 01, 00, 00, 01);
 
             Assert.Equal(expected, expression.Next(current));
         }
 
         [Fact]
-        public void ShouldGetNextHourAfterLastMinute()
+        public void ShouldIgnoreCharacterNotAllowed()
         {
-            var expression = new CronExpression("* 10,20,30 * * * *");
-            var current = new DateTime(2018, 12, 30, 08, 30, 59);
-            var expected = new DateTime(2018, 12, 30, 09, 10, 00);
-
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldGetNextDayAfterLastHour()
-        {
-            var expression = new CronExpression("* * 6,18 * * *");
-            var current = new DateTime(2018, 12, 30, 18, 59, 59);
-            var expected = new DateTime(2018, 12, 31, 06, 00, 00);
-
-            Assert.Equal(expected, expression.Next(current));
-        }
-
-        [Fact]
-        public void ShouldGetNextMonthAfterLastDay()
-        {
-            var expression = new CronExpression("* * * 15,20,25 * *");
-            var current = new DateTime(2018, 12, 25, 23, 59, 59);
-            var expected = new DateTime(2019, 01, 15, 00, 00, 00);
+            var expression = new CronExpression("* * 10#5 * * *");
+            var current = new DateTime(2019, 01, 01, 00, 00, 00);
+            var expected = DateTime.MinValue;
 
             Assert.Equal(expected, expression.Next(current));
         }
