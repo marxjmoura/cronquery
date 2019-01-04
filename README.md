@@ -23,6 +23,8 @@ dotnet add package CronQuery
 
 ## Creating a job
 
+Jobs are created by implementing the interface `IJob`.
+
 ```c#
 public class MyJob : IJob
 {
