@@ -71,7 +71,7 @@ Save the configuration in your `appsettings.json` like the example below:
 
 - `MySecondJob`: Runs every day at 2:00 A.M.
 
-- `MyThirdJob`: Runs every second between 2:00 P.M. and 6:00 P.M. only on Saturday every 15 days.
+- `MyThirdJob`: Runs every second between 2:00 P.M. and 6:59 P.M. only on Saturday every 15 days.
 
 ```json
 {
