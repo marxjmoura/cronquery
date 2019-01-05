@@ -36,7 +36,7 @@ jobs:
       - checkout
       - install_dotnet
       - run: dotnet pack src/lib/lib.csproj -o publish
-      - run: dotnet nuget push src/lib/publish/CronQuery.*.nupkg $NUGET_TOKEN
+      - run: dotnet nuget push src/lib/publish/CronQuery.*.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 workflows:
   version: 2.1
   test_and_deploy:
