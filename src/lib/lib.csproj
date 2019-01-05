@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>CronQuery</AssemblyName>
+    <AssemblyTitle>CronQuery</AssemblyTitle>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
     <Authors>Marx JMoura</Authors>
     <Company>LogiQ System</Company>
     <Owners>LogiQ System</Owners>
     <Copyright>Copyright © 2018 LogiQ System</Copyright>
-    <AssemblyName>CronQuery</AssemblyName>
-    <AssemblyTitle>CronQuery</AssemblyTitle>
     <Description>Lightweight job runner for ASP.NET Core.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/logiqsystem/cronquery</RepositoryUrl>
@@ -15,8 +17,6 @@
     <PackageReleaseNotes>https://github.com/logiqsystem/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>job runner;background tasks;scheduler</PackageTags>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
