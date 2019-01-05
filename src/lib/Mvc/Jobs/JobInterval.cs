@@ -28,7 +28,7 @@ using CronQuery.Cron;
 
 namespace CronQuery.Mvc.Jobs
 {
-    internal class JobInterval : IDisposable
+    public sealed class JobInterval : IDisposable
     {
         private CronExpression _cron;
         private TimeZoneInfo _timezone;

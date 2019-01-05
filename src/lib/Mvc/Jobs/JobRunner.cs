@@ -34,7 +34,7 @@ using Microsoft.Extensions.Options;
 
 namespace CronQuery.Mvc.Jobs
 {
-    internal class JobRunner : IDisposable
+    public sealed class JobRunner : IDisposable
     {
         private JobRunnerOptions _options;
         private IServiceProvider _serviceProvider;
@@ -48,7 +48,7 @@ namespace CronQuery.Mvc.Jobs
             _loggerFactory = loggerFactory;
             _timers = new List<IDisposable>();
 
-            options.OnChange(Restart);
+            options.OnChange(UpdateSettings);
         }
 
         public ICollection<Type> JobTypes { get; private set; } = new List<Type>();
@@ -74,12 +74,29 @@ namespace CronQuery.Mvc.Jobs
             {
                 var config = _options.Jobs.SingleOrDefault(entry => entry.Name == job.Name);
 
-                if (config == null || !config.Running)
+                if (config == null)
+                {
+                    var logger = _loggerFactory.CreateLogger(job.FullName);
+                    logger.LogWarning($"No job configuration matches '{job.Name}'.");
+
+                    continue;
+                }
+
+                if (!config.Running)
                 {
                     continue;
                 }
 
                 var cron = new CronExpression(config.Cron);
+
+                if (!cron.IsValid)
+                {
+                    var logger = _loggerFactory.CreateLogger(job.FullName);
+                    logger.LogWarning($"Invalid cron expression for '{job.Name}'.");
+
+                    continue;
+                }
+
                 var timer = new JobInterval(cron, timezone, async () => await Do(job));
 
                 _timers.Add(timer);
@@ -101,7 +118,7 @@ namespace CronQuery.Mvc.Jobs
                 catch (Exception error)
                 {
                     var logger = _loggerFactory.CreateLogger(job.FullName);
-                    logger.LogCritical(error, $"Job {job.Name} failed during running.");
+                    logger.LogError(error, $"Job '{job.Name}' failed during running.");
                 }
                 finally
                 {
@@ -113,9 +130,9 @@ namespace CronQuery.Mvc.Jobs
             }
         }
 
-        private void Restart(JobRunnerOptions options)
+        private void UpdateSettings(JobRunnerOptions newOptions)
         {
-            _options = options;
+            _options = newOptions;
 
             foreach (var timer in _timers)
             {
@@ -124,7 +141,7 @@ namespace CronQuery.Mvc.Jobs
 
             _timers.Clear();
 
-            if (options.Running)
+            if (newOptions.Running)
             {
                 Start();
             }

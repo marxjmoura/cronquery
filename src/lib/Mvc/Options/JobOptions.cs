@@ -23,7 +23,7 @@
 
 namespace CronQuery.Mvc.Options
 {
-    internal class JobOptions
+    public class JobOptions
     {
         public bool Running { get; set; }
         public string Name { get; set; }
