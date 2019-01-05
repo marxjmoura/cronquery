@@ -1,0 +1,24 @@
+{
+  "editor.minimap.enabled": false,
+  "editor.rulers": [140],
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.exclude": {
+    "**/.vs": true,
+    "**/.vscode.default": true,
+    "**/bin": true,
+    "**/obj": true,
+    "**/Properties": true,
+    "**/[P|p]ublish": true,
+    "**/*.csproj.user": true,
+    "**/*.sln": true,
+    "**/clover.xml": true,
+    "**/codecov": true,
+    "**/coverage-html": true,
+    "**/coverage.hits": true,
+    "**/coverage.json": true
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  }
+}
