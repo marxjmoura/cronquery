@@ -29,7 +29,7 @@ namespace tests.Fakes
 {
     public class LoggerFake : ILogger
     {
-        public ICollection<string> Messages { get; private set; } = new List<string>();
+        public ICollection<string> Messages { get; } = new List<string>();
 
         public IDisposable BeginScope<TState>(TState state) => null;
 

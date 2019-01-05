@@ -26,7 +26,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace CronQuery.Mvc.DependencyInjection
 {
-    public class CronQuerySetup
+    public sealed class CronQuerySetup
     {
         private JobRunner runner;
 

@@ -41,7 +41,7 @@ namespace CronQuery.Cron
                 .ToList();
         }
 
-        public IEnumerable<CronValue> Values { get; private set; }
+        public IEnumerable<CronValue> Values { get; }
 
         public bool Matches(DateTime dateTime)
         {
@@ -161,8 +161,9 @@ namespace CronQuery.Cron
         private DateTime DayOfWeekOccurence(DateTime dateTime)
         {
             var cron = Values.Single();
+            var dayOfWeek = (DayOfWeek)cron.Values.Single();
 
-            return dateTime.Next((DayOfWeek)cron.Values.Single(), cron.Nth);
+            return dateTime.Next(dayOfWeek, cron.Nth);
         }
     }
 }

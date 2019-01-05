@@ -29,6 +29,6 @@ namespace CronQuery.Mvc.Options
     {
         public bool Running { get; set; }
         public string Timezone { get; set; }
-        public ICollection<JobOptions> Jobs { get; private set; } = new List<JobOptions>();
+        public ICollection<JobOptions> Jobs { get; } = new List<JobOptions>();
     }
 }

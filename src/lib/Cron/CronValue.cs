@@ -84,17 +84,17 @@ namespace CronQuery.Cron
                 .ToList();
         }
 
-        public IEnumerable<int> Values { get; private set; }
-        public int Nth { get; private set; }
-        public int Step { get; private set; }
-        public bool IsAsterisk { get; private set; }
-        public bool IsL { get; private set; }
-        public bool HasAsterisk { get; private set; }
-        public bool HasL { get; private set; }
-        public bool HasW { get; private set; }
-        public bool HasDash { get; private set; }
-        public bool HasSlash { get; private set; }
-        public bool HasHash { get; private set; }
+        public IEnumerable<int> Values { get; }
+        public int Nth { get; }
+        public int Step { get; }
+        public bool IsAsterisk { get; }
+        public bool IsL { get; }
+        public bool HasAsterisk { get; }
+        public bool HasL { get; }
+        public bool HasW { get; }
+        public bool HasDash { get; }
+        public bool HasSlash { get; }
+        public bool HasHash { get; }
 
         private int ToInt32(string value)
         {

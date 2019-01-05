@@ -54,7 +54,7 @@ namespace CronQuery.Cron
             }
         }
 
-        public bool IsValid { get; private set; }
+        public bool IsValid { get; }
 
         public DateTime Next(DateTime query)
         {
