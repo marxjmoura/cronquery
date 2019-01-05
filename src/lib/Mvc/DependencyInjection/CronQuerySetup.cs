@@ -45,7 +45,7 @@ namespace CronQuery.Mvc.DependencyInjection
         public void StartWith(IApplicationLifetime appLifetime)
         {
             appLifetime.ApplicationStarted.Register(runner.Start);
-            appLifetime.ApplicationStopping.Register(runner.Dispose);
+            appLifetime.ApplicationStopping.Register(runner.Stop);
         }
     }
 }

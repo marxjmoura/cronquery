@@ -176,5 +176,47 @@ namespace tests.Unit.Runner
 
             Assert.Throws<ArgumentNullException>(() => new JobRunner(optionsMonitor, serviceProvider, null));
         }
+
+        [Fact]
+        public async Task ShouldRunJobManually()
+        {
+            var optionsMonitor = new OptionsMonitorFake(JobSuccessful.Options);
+            var serviceProvider = new ServiceProviderFake();
+            var loggerFactory = new LoggerFactoryFake();
+            var jobRunner = new JobRunner(optionsMonitor, serviceProvider, loggerFactory);
+
+            jobRunner.Enqueue<JobSuccessful>();
+
+            await jobRunner.RunAsync(typeof(JobSuccessful));
+
+            Assert.True(serviceProvider.GetService<JobSuccessful>().Executed);
+        }
+
+        [Fact]
+        public async Task ShouldThrowWhenRunManuallyJobNotEnqueued()
+        {
+            var optionsMonitor = new OptionsMonitorFake(JobSuccessful.Options);
+            var serviceProvider = new ServiceProviderFake();
+            var loggerFactory = new LoggerFactoryFake();
+            var jobRunner = new JobRunner(optionsMonitor, serviceProvider, loggerFactory);
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await jobRunner.RunAsync(typeof(JobSuccessful)));
+        }
+
+        [Fact]
+        public async Task ShouldLogJobFailAfterRunManually()
+        {
+            var optionsMonitor = new OptionsMonitorFake(JobWithError.Options);
+            var serviceProvider = new ServiceProviderFake();
+            var loggerFactory = new LoggerFactoryFake();
+            var jobRunner = new JobRunner(optionsMonitor, serviceProvider, loggerFactory);
+
+            jobRunner.Enqueue<JobWithError>();
+
+            await jobRunner.RunAsync(typeof(JobWithError));
+
+            Assert.Contains(loggerFactory.Logger.Messages, message =>
+                message == $"Job '{nameof(JobWithError)}' failed during running.");
+        }
     }
 }

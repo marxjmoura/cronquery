@@ -34,11 +34,12 @@ using Microsoft.Extensions.Options;
 
 namespace CronQuery.Mvc.Jobs
 {
-    public sealed class JobRunner : IDisposable
+    public sealed class JobRunner
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ICollection<IDisposable> _timers;
+        private readonly ICollection<Type> _jobs;
 
         private JobRunnerOptions _options;
 
@@ -63,25 +64,46 @@ namespace CronQuery.Mvc.Jobs
             _serviceProvider = serviceProvider;
             _loggerFactory = loggerFactory;
             _timers = new List<IDisposable>();
+            _jobs = new List<Type>();
 
-            options.OnChange(Reload);
+            options.OnChange(Restart);
         }
 
-        public ICollection<Type> Jobs { get; private set; } = new List<Type>();
-
-        public void Dispose()
-        {
-            foreach (var timer in _timers)
-            {
-                timer.Dispose();
-            }
-
-            _timers.Clear();
-        }
+        public IEnumerable<Type> Jobs => _jobs;
 
         public void Enqueue<TJob>() where TJob : IJob
         {
-            Jobs.Add(typeof(TJob));
+            _jobs.Add(typeof(TJob));
+        }
+
+        public async Task RunAsync(Type job)
+        {
+            if (!_jobs.Contains(job))
+            {
+                throw new ArgumentException($"Job {job.Name} not enqueued.");
+            }
+
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(job));
+
+                try
+                {
+                    await jobInstance.RunAsync();
+                }
+                catch (Exception error)
+                {
+                    var logger = _loggerFactory.CreateLogger(job.FullName);
+                    logger.LogError(error, $"Job '{job.Name}' failed during running.");
+                }
+                finally
+                {
+                    if (jobInstance is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+                }
+            }
         }
 
         public void Start()
@@ -117,7 +139,7 @@ namespace CronQuery.Mvc.Jobs
                     continue;
                 }
 
-                var timer = new JobInterval(cron, timezone, async () => await Do(job));
+                var timer = new JobInterval(cron, timezone, async () => await RunAsync(job));
 
                 _timers.Add(timer);
 
@@ -125,36 +147,21 @@ namespace CronQuery.Mvc.Jobs
             }
         }
 
-        private async Task Do(Type job)
+        public void Stop()
         {
-            using (var scope = _serviceProvider.CreateScope())
+            foreach (var timer in _timers)
             {
-                var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(job));
-
-                try
-                {
-                    await jobInstance.RunAsync();
-                }
-                catch (Exception error)
-                {
-                    var logger = _loggerFactory.CreateLogger(job.FullName);
-                    logger.LogError(error, $"Job '{job.Name}' failed during running.");
-                }
-                finally
-                {
-                    if (jobInstance is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-                }
+                timer.Dispose();
             }
+
+            _timers.Clear();
         }
 
-        private void Reload(JobRunnerOptions options)
+        private void Restart(JobRunnerOptions options)
         {
             _options = options;
 
-            Dispose();
+            Stop();
             Start();
         }
     }
