@@ -37,7 +37,7 @@ public class MyJob : IJob
 
 ## Registering a job
 
-Jobs are registered in the app's `Startup` class:
+Jobs are registered in the app's `Startup` class.
 
 ```c#
 public void ConfigureServices(IServiceCollection services)

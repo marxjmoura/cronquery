@@ -24,7 +24,7 @@ Cron is a time-based job scheduler. Jobs run periodically at fixed times configu
 
 ## Special characters
 
-Cron syntax has special characters with specific meanings:
+The following table shows the special characters present in cron syntax and their respective meanings.
 
 | Character        | Description                                             | Example |
 |------------------|---------------------------------------------------------|---------|
@@ -38,7 +38,7 @@ Cron syntax has special characters with specific meanings:
 
 ## Supported combinations
 
-Cron allows the combination of subexpressions to yield a more complex cron expression.
+Cron allows the combination of subexpressions to produce a more complex cron expression.
 The following list shows the combinations supported by CronQuery:
 
 - `*`: Every time unit.
@@ -46,7 +46,7 @@ The following list shows the combinations supported by CronQuery:
 - `*/00`: Every time unit skipping a given number of values.
 - `00/00`: Skipping a given number of values starting at specific value.
 - `00-00/00`: Skipping a given number of values in a given range of values.
-- `00,00-00,00/00,00-00/00`: List of values (you can yield variations). List can only contains single numbers, range, increment and range combined with increment.
+- `00,00-00,00/00,00-00/00`: List of values (you can produce variations). List can only contains single numbers, range, increment and range combined with increment.
 - `L` (day of month only): Last day of the month (including weekend).
 - `LW` (day of month only): Last weekday (Monday-Friday) of the month.
 - `L-00` (day of month only): Days (1-31) before the last day of month.
