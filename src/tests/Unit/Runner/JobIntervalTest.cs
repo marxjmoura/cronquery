@@ -40,7 +40,7 @@ namespace tests.Unit.Runner
 
             interval.Run();
 
-            await Task.Delay(2500);
+            await Task.Delay(2250);
 
             Assert.Equal(2, fires);
         }
