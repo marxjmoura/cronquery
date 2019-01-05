@@ -64,7 +64,7 @@ namespace CronQuery.Mvc.Jobs
             _loggerFactory = loggerFactory;
             _timers = new List<IDisposable>();
 
-            options.OnChange(Restart);
+            options.OnChange(Reload);
         }
 
         public ICollection<Type> Jobs { get; private set; } = new List<Type>();
@@ -75,6 +75,8 @@ namespace CronQuery.Mvc.Jobs
             {
                 timer.Dispose();
             }
+
+            _timers.Clear();
         }
 
         public void Enqueue<TJob>() where TJob : IJob
@@ -148,17 +150,11 @@ namespace CronQuery.Mvc.Jobs
             }
         }
 
-        private void Restart(JobRunnerOptions newOptions)
+        private void Reload(JobRunnerOptions options)
         {
-            _options = newOptions;
+            _options = options;
 
-            foreach (var timer in _timers)
-            {
-                timer.Dispose();
-            }
-
-            _timers.Clear();
-
+            Dispose();
             Start();
         }
     }
