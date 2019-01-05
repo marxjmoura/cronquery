@@ -41,7 +41,7 @@ namespace tests.Functional
         [Fact]
         public async Task Run()
         {
-            await Task.Delay(1500); // Waiting for jobs
+            await Task.Delay(1500); // Waiting for the jobs
 
             Assert.True(_server.Job<JobSuccessful>().Executed);
             Assert.False(_server.Job<JobStopped>().Executed);
@@ -51,6 +51,9 @@ namespace tests.Functional
 
             Assert.Contains(_server.Logger().Messages, message =>
                 message == $"No job configuration matches '{nameof(JobNotConfigured)}'.");
+
+            Assert.Contains(_server.Logger().Messages, message =>
+                message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
         }
     }
 }

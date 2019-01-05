@@ -48,6 +48,7 @@ namespace tests.Functional
             services.AddSingleton<ILoggerFactory, LoggerFactoryFake>();
 
             services.AddSingleton<JobSuccessful>();
+            services.AddSingleton<JobBadlyConfigured>();
             services.AddSingleton<JobWithError>();
             services.AddSingleton<JobNotConfigured>();
             services.AddSingleton<JobStopped>();
@@ -57,6 +58,7 @@ namespace tests.Functional
         {
             app.UseCronQuery()
                 .Enqueue<JobSuccessful>()
+                .Enqueue<JobBadlyConfigured>()
                 .Enqueue<JobWithError>()
                 .Enqueue<JobNotConfigured>()
                 .Enqueue<JobStopped>()

@@ -21,28 +21,41 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using CronQuery.Mvc.Jobs;
-using CronQuery.Mvc.Options;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace tests.Fakes.Jobs
+namespace tests.Fakes
 {
-    public class JobNotConfigured : IJob
+    public class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
     {
-        public Task RunAsync()
+        private readonly IDictionary<Type, object> _instances;
+
+        public ServiceProviderFake()
         {
-            return Task.CompletedTask;
+            _instances = new Dictionary<Type, object>();
         }
 
-        public static JobRunnerOptions Options
-        {
-            get
-            {
-                var options = new JobRunnerOptions();
-                options.Running = true;
+        public IServiceProvider ServiceProvider => this;
 
-                return options;
+        public IServiceScope CreateScope() => this;
+
+        public void Dispose() { }
+
+        public object GetService(Type serviceType)
+        {
+            if (typeof(IJob).IsAssignableFrom(serviceType))
+            {
+                if (!_instances.ContainsKey(serviceType))
+                {
+                    _instances.Add(serviceType, Activator.CreateInstance(serviceType));
+                }
+
+                return _instances[serviceType];
             }
+
+            return this;
         }
     }
 }

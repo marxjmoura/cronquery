@@ -21,28 +21,49 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using CronQuery.Mvc.Jobs;
+using System;
 using CronQuery.Mvc.Options;
+using Microsoft.Extensions.Options;
 
-namespace tests.Fakes.Jobs
+namespace tests.Fakes
 {
-    public class JobNotConfigured : IJob
+    public class OptionsMonitorFake : IOptionsMonitor<JobRunnerOptions>, IDisposable
     {
-        public Task RunAsync()
+        private JobRunnerOptions _options;
+        private Action<JobRunnerOptions, string> _listener;
+
+        public OptionsMonitorFake(JobRunnerOptions options)
         {
-            return Task.CompletedTask;
+            _options = options;
         }
 
-        public static JobRunnerOptions Options
-        {
-            get
-            {
-                var options = new JobRunnerOptions();
-                options.Running = true;
+        public JobRunnerOptions CurrentValue => _options;
 
-                return options;
+        public void Change(Action<JobRunnerOptions> change)
+        {
+            change(_options);
+
+            if (_listener != null)
+            {
+                _listener(_options, string.Empty);
             }
+        }
+
+        public void Dispose()
+        {
+            _listener = null;
+        }
+
+        public JobRunnerOptions Get(string name)
+        {
+            return _options;
+        }
+
+        public IDisposable OnChange(Action<JobRunnerOptions, string> listener)
+        {
+            _listener = listener;
+
+            return this;
         }
     }
 }

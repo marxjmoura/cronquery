@@ -27,18 +27,13 @@ namespace tests.Fakes
 {
     public class LoggerFactoryFake : ILoggerFactory
     {
-        private static ILogger _logger;
+        public LoggerFake Logger { get; } = new LoggerFake();
 
         public void AddProvider(ILoggerProvider provider) { }
 
         public ILogger CreateLogger(string categoryName)
         {
-            if (_logger == null)
-            {
-                _logger = new LoggerFake();
-            }
-
-            return _logger;
+            return Logger;
         }
 
         public void Dispose() { }

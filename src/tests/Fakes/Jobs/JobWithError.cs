@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
+using CronQuery.Mvc.Options;
 
 namespace tests.Fakes.Jobs
 {
@@ -32,6 +33,23 @@ namespace tests.Fakes.Jobs
         public Task RunAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public static JobRunnerOptions Options
+        {
+            get
+            {
+                var options = new JobRunnerOptions();
+                options.Running = true;
+                options.Jobs.Add(new JobOptions
+                {
+                    Running = true,
+                    Name = nameof(JobWithError),
+                    Cron = "* * * * * *"
+                });
+
+                return options;
+            }
         }
     }
 }

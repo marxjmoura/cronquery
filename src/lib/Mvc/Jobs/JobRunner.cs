@@ -36,22 +36,38 @@ namespace CronQuery.Mvc.Jobs
 {
     public sealed class JobRunner : IDisposable
     {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly ICollection<IDisposable> _timers;
+
         private JobRunnerOptions _options;
-        private IServiceProvider _serviceProvider;
-        private ILoggerFactory _loggerFactory;
-        private ICollection<IDisposable> _timers;
 
         public JobRunner(IOptionsMonitor<JobRunnerOptions> options, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (serviceProvider == null)
+            {
+                throw new ArgumentNullException(nameof(serviceProvider));
+            }
+
+            if (loggerFactory == null)
+            {
+                throw new ArgumentNullException(nameof(loggerFactory));
+            }
+
             _options = options.CurrentValue;
             _serviceProvider = serviceProvider;
             _loggerFactory = loggerFactory;
             _timers = new List<IDisposable>();
 
-            options.OnChange(UpdateSettings);
+            options.OnChange(Restart);
         }
 
-        public ICollection<Type> JobTypes { get; private set; } = new List<Type>();
+        public ICollection<Type> Jobs { get; private set; } = new List<Type>();
 
         public void Dispose()
         {
@@ -63,14 +79,16 @@ namespace CronQuery.Mvc.Jobs
 
         public void Enqueue<TJob>() where TJob : IJob
         {
-            JobTypes.Add(typeof(TJob));
+            Jobs.Add(typeof(TJob));
         }
 
         public void Start()
         {
+            if (!_options.Running) return;
+
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(_options.Timezone ?? "UTC");
 
-            foreach (var job in JobTypes)
+            foreach (var job in Jobs)
             {
                 var config = _options.Jobs.SingleOrDefault(entry => entry.Name == job.Name);
 
@@ -130,7 +148,7 @@ namespace CronQuery.Mvc.Jobs
             }
         }
 
-        private void UpdateSettings(JobRunnerOptions newOptions)
+        private void Restart(JobRunnerOptions newOptions)
         {
             _options = newOptions;
 
@@ -141,10 +159,7 @@ namespace CronQuery.Mvc.Jobs
 
             _timers.Clear();
 
-            if (newOptions.Running)
-            {
-                Start();
-            }
+            Start();
         }
     }
 }

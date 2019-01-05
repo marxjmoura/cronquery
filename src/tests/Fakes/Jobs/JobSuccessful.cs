@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
+using CronQuery.Mvc.Options;
 
 namespace tests.Fakes.Jobs
 {
@@ -38,6 +39,23 @@ namespace tests.Fakes.Jobs
             Executed = true;
 
             return Task.CompletedTask;
+        }
+
+        public static JobRunnerOptions Options
+        {
+            get
+            {
+                var options = new JobRunnerOptions();
+                options.Running = true;
+                options.Jobs.Add(new JobOptions
+                {
+                    Running = true,
+                    Name = nameof(JobSuccessful),
+                    Cron = "* * * * * *"
+                });
+
+                return options;
+            }
         }
     }
 }
