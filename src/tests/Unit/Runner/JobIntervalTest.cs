@@ -32,7 +32,7 @@ namespace tests.Unit.Runner
     public class JobIntervalTest
     {
         [Fact]
-        public async Task ShouldRunWork()
+        public void ShouldRunWork()
         {
             var fires = 0;
             var cron = new CronExpression("* * * * * *");
@@ -40,13 +40,13 @@ namespace tests.Unit.Runner
 
             interval.Run();
 
-            await Task.Delay(2250);
+            Task.Delay(2500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.Equal(2, fires);
         }
 
         [Fact]
-        public async Task ShouldNotRunWorkAfterDispose()
+        public void ShouldNotRunWorkAfterDispose()
         {
             var fires = 0;
             var cron = new CronExpression("* * * * * *");
@@ -54,11 +54,11 @@ namespace tests.Unit.Runner
 
             interval.Run();
 
-            await Task.Delay(1500);
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             interval.Dispose();
 
-            await Task.Delay(1500);
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.Equal(1, fires);
         }
