@@ -82,7 +82,7 @@ Save the configuration in your `appsettings.json` like the example below:
       {
         "Name": "MyFirstJob",
         "Running": true,
-        "Cron": "* * * * * 2-6"
+        "Cron": "* * * * * 1-6"
       },
       {
         "Name": "MySecondJob",
