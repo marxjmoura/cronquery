@@ -4,6 +4,7 @@
     <AssemblyName>CronQuery</AssemblyName>
     <AssemblyTitle>CronQuery</AssemblyTitle>
     <AssemblyVersion>1.0.1</AssemblyVersion>
+    <Version>1.0.1</Version>
     <Authors>Marx JMoura</Authors>
     <Company>LogiQ System</Company>
     <Owners>LogiQ System</Owners>
