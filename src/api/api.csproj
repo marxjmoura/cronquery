@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>CronQuery</AssemblyName>
     <AssemblyTitle>CronQuery</AssemblyTitle>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
     <Authors>Marx JMoura</Authors>
     <Company>LogiQ System</Company>
     <Owners>LogiQ System</Owners>
@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/logiqsystem/cronquery</RepositoryUrl>
     <PackageId>CronQuery</PackageId>
     <PackageProjectUrl>https://github.com/logiqsystem/cronquery</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/logiqsystem/cronquery/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicense>https://github.com/logiqsystem/cronquery/blob/master/LICENSE</PackageLicense>
     <PackageReleaseNotes>https://github.com/logiqsystem/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>job runner;background tasks;scheduler</PackageTags>

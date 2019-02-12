@@ -2,50 +2,41 @@ version : 2.1
 default: &default
   machine:
     image: circleci/classic:latest
-commands:
-  install_dotnet:
-    steps:
-      - run: wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
-      - run: sudo dpkg -i packages-microsoft-prod.deb
-      - run: sudo apt-get install apt-transport-https
-      - run: sudo apt-get update
-      - run: sudo apt-get install -y dpkg
-      - run: sudo apt-get install dotnet-sdk-2.2
 jobs:
-  test:
+  build:
     <<: *default
     steps:
       - checkout
-      - install_dotnet
-      - run: dotnet build src
-      - run: cd src/tests && dotnet minicover instrument --workdir ../ --assemblies tests/**/bin/**/*.dll --sources lib/**/*.cs
-      - run: cd src/tests && dotnet minicover reset
-      - run: cd src/tests && for project in tests.csproj; do dotnet test $project --no-build; done
-      - run: cd src/tests && dotnet minicover uninstrument --workdir ../
-      - run: cd src/tests && dotnet minicover htmlreport --workdir ../
-      - run: cd src/tests && dotnet minicover cloverreport --workdir ../
-      - run: curl -s https://codecov.io/bash > ./src/codecov
-      - run: chmod +x ./src/codecov
-      - run: ./src/codecov -f "./src/clover.xml" -t $CODECOV_TOKEN
+      - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
+      - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
+      - run: bash devops/tools/dotnet.sh test
+      - run: curl -s https://codecov.io/bash > ./codecov
+      - run: chmod +x ./codecov
+      - run: ./codecov -f "./src/tests/coverage/opencover.xml" -t $CODECOV_TOKEN
       - store_artifacts:
-          path: src/coverage-html
+          path: src/tests/coverage/report
           destination: coverage
   deploy:
     <<: *default
     steps:
       - checkout
-      - install_dotnet
-      - run: dotnet pack src/lib/lib.csproj -o publish
-      - run: dotnet nuget push src/lib/publish/CronQuery.*.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
+      - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
+      - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
+      - run: dotnet pack src/api/api.csproj -o dist
+      - run: dotnet nuget push src/api/dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 workflows:
   version: 2.1
-  test_and_deploy:
+  build_and_deploy:
     jobs:
-      - test
+      - build:
+          filters:
+            tags:
+              only: /.*/
       - deploy:
           requires:
-            - test
+            - build
           filters:
+            tags:
+              only: /^v\d\.\d\.\d/
             branches:
-              only:
-                - master
+              ignore: /.*/

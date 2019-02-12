@@ -45,24 +45,9 @@ namespace CronQuery.Mvc.Jobs
 
         public JobRunner(IOptionsMonitor<JobRunnerOptions> options, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            _options = options.CurrentValue;
-            _serviceProvider = serviceProvider;
-            _loggerFactory = loggerFactory;
+            _options = options?.CurrentValue ?? throw new ArgumentNullException(nameof(options));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
             _timers = new List<IDisposable>();
             _jobs = new List<Type>();
 

@@ -30,7 +30,7 @@ wwwroot/
 Properties/
 Settings/
 TestResults/
-coverage-html/
+coverage/
 .vscode/
 ###################
 # Web publish log #

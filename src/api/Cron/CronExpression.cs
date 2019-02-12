@@ -73,6 +73,7 @@ namespace CronQuery.Cron
 
             if (time <= query || !_hour.Matches(time))
             {
+                time = _second.Reset(time);
                 time = _minute.Reset(time);
                 time = _hour.Next(time);
             }

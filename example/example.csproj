@@ -6,6 +6,6 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\lib\lib.csproj" />
+    <ProjectReference Include="..\src\api\api.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 {
+  "editor.fontSize": 12,
   "editor.minimap.enabled": false,
   "editor.rulers": [140],
   "files.insertFinalNewline": true,
@@ -12,11 +13,7 @@
     "**/[P|p]ublish": true,
     "**/*.csproj.user": true,
     "**/*.sln": true,
-    "**/clover.xml": true,
-    "**/codecov": true,
-    "**/coverage-html": true,
-    "**/coverage.hits": true,
-    "**/coverage.json": true
+    "**/coverage": true
   },
   "[markdown]": {
     "files.trimTrailingWhitespace": false

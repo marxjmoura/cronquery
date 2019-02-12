@@ -4,6 +4,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AltCover" Version="5.0.665" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
@@ -11,9 +12,10 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\lib.csproj" />
+    <ProjectReference Include="..\api\api.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="MiniCover" Version="2.0.0-ci-20181108093139" />
+    <DotNetCliToolReference Include="altcover.dotnet" Version="5.0.665" />
+    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.0.11" />
   </ItemGroup>
 </Project>

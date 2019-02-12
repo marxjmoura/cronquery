@@ -34,7 +34,7 @@ namespace tests.Unit.Runner
     public class JobRunnerTest
     {
         [Fact]
-        public async Task ShouldRunJobSuccessfully()
+        public void ShouldRunJobSuccessfully()
         {
             var optionsMonitor = new OptionsMonitorFake(JobSuccessful.Options);
             var serviceProvider = new ServiceProviderFake();
@@ -44,13 +44,13 @@ namespace tests.Unit.Runner
             jobRunner.Enqueue<JobSuccessful>();
             jobRunner.Start();
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.True(serviceProvider.GetService<JobSuccessful>().Executed);
         }
 
         [Fact]
-        public async Task ShouldNotRunStoppedJob()
+        public void ShouldNotRunStoppedJob()
         {
             var optionsMonitor = new OptionsMonitorFake(JobStopped.Options);
             var serviceProvider = new ServiceProviderFake();
@@ -60,7 +60,7 @@ namespace tests.Unit.Runner
             jobRunner.Enqueue<JobStopped>();
             jobRunner.Start();
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.False(serviceProvider.GetService<JobStopped>().Executed);
         }
@@ -81,7 +81,7 @@ namespace tests.Unit.Runner
         }
 
         [Fact]
-        public async Task ShouldLogJobFail()
+        public void ShouldLogJobFail()
         {
             var optionsMonitor = new OptionsMonitorFake(JobWithError.Options);
             var serviceProvider = new ServiceProviderFake();
@@ -91,14 +91,14 @@ namespace tests.Unit.Runner
             jobRunner.Enqueue<JobWithError>();
             jobRunner.Start();
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.Contains(loggerFactory.Logger.Messages, message =>
                 message == $"Job '{nameof(JobWithError)}' failed during running.");
         }
 
         [Fact]
-        public async Task ShouldLogWhenCronIsInvalid()
+        public void ShouldLogWhenCronIsInvalid()
         {
             var optionsMonitor = new OptionsMonitorFake(JobBadlyConfigured.Options);
             var serviceProvider = new ServiceProviderFake();
@@ -108,14 +108,14 @@ namespace tests.Unit.Runner
             jobRunner.Enqueue<JobBadlyConfigured>();
             jobRunner.Start();
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.Contains(loggerFactory.Logger.Messages, message =>
                 message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
         }
 
         [Fact]
-        public async Task ShouldNotRunJobsWhenRunnerIsOff()
+        public void ShouldNotRunJobsWhenRunnerIsOff()
         {
             var optionsMonitor = new OptionsMonitorFake(JobSuccessful.Options);
             optionsMonitor.Change(options => options.Running = false);
@@ -127,13 +127,13 @@ namespace tests.Unit.Runner
             jobRunner.Enqueue<JobSuccessful>();
             jobRunner.Start();
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.False(serviceProvider.GetService<JobSuccessful>().Executed);
         }
 
         [Fact]
-        public async Task ShouldAssumeNewConfigurationImmediately()
+        public void ShouldAssumeNewConfigurationImmediately()
         {
             var optionsMonitor = new OptionsMonitorFake(JobSuccessful.Options);
             var serviceProvider = new ServiceProviderFake();
@@ -145,7 +145,7 @@ namespace tests.Unit.Runner
 
             optionsMonitor.Change(options => options.Running = false);
 
-            await Task.Delay(1500); // Waiting for the job
+            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.False(serviceProvider.GetService<JobSuccessful>().Executed);
         }

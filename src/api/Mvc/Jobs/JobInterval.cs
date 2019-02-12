@@ -37,24 +37,9 @@ namespace CronQuery.Mvc.Jobs
 
         public JobInterval(CronExpression cron, TimeZoneInfo timezone, Func<Task> work)
         {
-            if (cron == null)
-            {
-                throw new ArgumentNullException(nameof(cron));
-            }
-
-            if (timezone == null)
-            {
-                throw new ArgumentNullException(nameof(timezone));
-            }
-
-            if (work == null)
-            {
-                throw new ArgumentNullException(nameof(work));
-            }
-
-            _cron = cron;
-            _timezone = timezone;
-            _work = work;
+            _cron = cron ?? throw new ArgumentNullException(nameof(cron));
+            _timezone = timezone ?? throw new ArgumentNullException(nameof(timezone));
+            _work = work ?? throw new ArgumentNullException(nameof(work));
         }
 
         public void Dispose()
