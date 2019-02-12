@@ -12,7 +12,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\lib.csproj" />
+    <ProjectReference Include="..\api\api.csproj" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="altcover.dotnet" Version="5.0.665" />
