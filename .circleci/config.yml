@@ -3,7 +3,7 @@ default: &default
   machine:
     image: circleci/classic:latest
 jobs:
-  test:
+  build:
     <<: *default
     steps:
       - checkout
