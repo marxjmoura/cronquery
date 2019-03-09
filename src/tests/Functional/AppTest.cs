@@ -31,7 +31,7 @@ namespace tests.Functional
 {
     public class AppTest
     {
-        private TestServer _server;
+        private readonly TestServer _server;
 
         public AppTest()
         {

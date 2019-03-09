@@ -23,9 +23,9 @@
 
 using CronQuery.Mvc.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using tests.Fakes;
 using tests.Fakes.Jobs;
@@ -54,7 +54,7 @@ namespace tests.Functional
             services.AddSingleton<JobStopped>();
         }
 
-        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
             app.UseCronQuery()
                 .Enqueue<JobSuccessful>()

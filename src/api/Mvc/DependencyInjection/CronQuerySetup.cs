@@ -22,13 +22,13 @@
  */
 
 using CronQuery.Mvc.Jobs;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace CronQuery.Mvc.DependencyInjection
 {
-    public sealed class CronQuerySetup
+	public sealed class CronQuerySetup
     {
-        private JobRunner runner;
+        private readonly JobRunner runner;
 
         internal CronQuerySetup(JobRunner runner)
         {
@@ -42,7 +42,7 @@ namespace CronQuery.Mvc.DependencyInjection
             return this;
         }
 
-        public void StartWith(IApplicationLifetime appLifetime)
+        public void StartWith(IHostApplicationLifetime appLifetime)
         {
             appLifetime.ApplicationStarted.Register(runner.Start);
             appLifetime.ApplicationStopping.Register(runner.Stop);
