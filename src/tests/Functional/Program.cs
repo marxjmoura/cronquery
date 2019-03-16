@@ -30,18 +30,18 @@ using System.IO;
 
 namespace tests.Functional
 {
-	public class Program
-	{
-		public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
-			.UseStartup<Startup>()
-			.UseEnvironment("Testing")
-			.ConfigureAppConfiguration((builderContext, config) =>
-			{
-				var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
-				var root = AppContext.BaseDirectory.Replace(build, string.Empty);
-				var appsettings = Path.Combine(root, "Functional", "appsettings.json");
+    public class Program
+    {
+        public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
+            .UseStartup<Startup>()
+            .UseEnvironment("Testing")
+            .ConfigureAppConfiguration((builderContext, config) =>
+            {
+                var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
+                var root = AppContext.BaseDirectory.Replace(build, string.Empty);
+                var appsettings = Path.Combine(root, "Functional", "appsettings.json");
 
-				config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
-			});
-	}
+                config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
+            });
+    }
 }
