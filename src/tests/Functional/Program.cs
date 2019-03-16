@@ -27,7 +27,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
-
 namespace tests.Functional
 {
     public class Program
