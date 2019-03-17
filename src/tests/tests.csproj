@@ -1,15 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <NullableReferenceTypes>true</NullableReferenceTypes>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AltCover" Version="5.0.665" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="3.0.0-preview3-19153-02" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0-preview3.19153.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0-preview3.19153.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.0.0-preview3.19153.1" />
+    <PackageReference Include="AltCover" Version="5.1.666" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.0.0-preview3-19153-02" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\api\api.csproj" />
@@ -17,5 +25,10 @@
   <ItemGroup>
     <DotNetCliToolReference Include="altcover.dotnet" Version="5.0.665" />
     <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.0.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Functional\appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -21,10 +21,11 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 
 namespace tests.Functional
 {
