@@ -21,14 +21,43 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using System;
+using System.Text.RegularExpressions;
 
 namespace CronQuery.Mvc.Options
 {
-    public class JobRunnerOptions
+    public class TimeZoneOptions
     {
-        public bool Running { get; set; }
-        public string TimeZone { get; set; }
-        public ICollection<JobOptions> Jobs { get; } = new List<JobOptions>();
+        const string UtcOffsetRegex = @"^UTC[+-]\d{2}:\d{2}$";
+
+        private readonly string _timeZone;
+
+        public TimeZoneOptions(string timeZone)
+        {
+            _timeZone = timeZone;
+        }
+
+        public TimeZoneInfo ToTimeZoneInfo()
+        {
+            if (string.IsNullOrWhiteSpace(_timeZone))
+            {
+                return TimeZoneInfo.Utc;
+            }
+            else if (Regex.IsMatch(_timeZone, UtcOffsetRegex))
+            {
+                var timeSpanString = Regex.Replace(_timeZone, "UTC[+]?", string.Empty);
+
+                return TimeZoneInfo.CreateCustomTimeZone(
+                    id: "CronQuery",
+                    baseUtcOffset: TimeSpan.Parse(timeSpanString),
+                    displayName: $"({_timeZone}) CronQuery",
+                    standardDisplayName: "CronQuery Custom Time"
+                );
+            }
+            else
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(_timeZone);
+            }
+        }
     }
 }

@@ -67,9 +67,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Setting up a job
 
-Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific timezone. Also, turn on or off CronQuery or a specific job by setting the `Running` property to `true` or `false` respectively.
-
-Save the configuration in your `appsettings.json` like the example below:
+Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific timezone (UTC is default). Save the configuration in your `appsettings.json` like the example below:
 
 - `MyFirstJob`: Runs every second on every day, except Sunday.
 
@@ -81,7 +79,7 @@ Save the configuration in your `appsettings.json` like the example below:
 {
   "CronQuery": {
     "Running": true,
-    "Timezone": "E. South America Standard Time",
+    "TimeZone": "E. South America Standard Time",
     "Jobs": [
       {
         "Name": "MyFirstJob",
@@ -104,6 +102,14 @@ Save the configuration in your `appsettings.json` like the example below:
 ```
 
 > Whenever you save the `appsettings.json` CronQuery immediately assumes the new configuration.
+
+| Property                   | Description                                                                |
+|----------------------------|----------------------------------------------------------------------------|
+| `CronQuery.Running`        | Turn on (`true`) or turn off (`false`) the CronQuery runner.               |
+| `CronQuery.TimeZone`       | System time zone ID or a custom UTC offset, e.g. `UTC-03:00`, `UTC+01:00`. |
+| `CronQuery.Jobs[].Name`    | Job class name.                                                            |
+| `CronQuery.Jobs[].Running` | Turn on (`true`) or turn off (`false`) the job.                            |
+| `CronQuery.Jobs[].Cron`    | CRON expression that triggers the job.                                     |
 
 ## Contact us
 

@@ -95,7 +95,7 @@ namespace CronQuery.Mvc.Jobs
         {
             if (!_options.Running) return;
 
-            var timezone = TimeZoneInfo.FindSystemTimeZoneById(_options.Timezone ?? "UTC");
+            var timeZone = new TimeZoneOptions(_options.TimeZone).ToTimeZoneInfo();
 
             foreach (var job in Jobs)
             {
@@ -124,7 +124,7 @@ namespace CronQuery.Mvc.Jobs
                     continue;
                 }
 
-                var timer = new JobInterval(cron, timezone, async () => await RunAsync(job));
+                var timer = new JobInterval(cron, timeZone, async () => await RunAsync(job));
 
                 _timers.Add(timer);
 
