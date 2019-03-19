@@ -9,6 +9,7 @@ jobs:
       - checkout
       - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
       - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
+      - run: bash devops/tools/dotnet.sh install -v sdk-3.0 -o ubuntu-14.04
       - run: bash devops/tools/dotnet.sh test
       - run: curl -s https://codecov.io/bash > ./codecov
       - run: chmod +x ./codecov
@@ -22,6 +23,7 @@ jobs:
       - checkout
       - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
       - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
+      - run: bash devops/tools/dotnet.sh install -v sdk-3.0 -o ubuntu-14.04
       - run: dotnet pack src/api/api.csproj -o dist
       - run: dotnet nuget push src/api/dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 workflows:
