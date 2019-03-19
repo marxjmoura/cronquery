@@ -25,7 +25,7 @@ jobs:
       - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
       - run: bash devops/tools/dotnet.sh install -v sdk-3.0 -o ubuntu-14.04
       - run: dotnet pack src/api/api.csproj -o dist
-      - run: dotnet nuget push src/api/dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
+      - run: dotnet nuget push dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 workflows:
   version: 2.1
   build_and_deploy:
