@@ -71,4 +71,4 @@ The following table shows examples of cron expressions and their respective mean
 | 0 0 8-18/2 * * *  | Every 2 hours between 8:00 AM and 6:00 PM               |
 | 0 0 10 * * 1#3    | At 10:00 AM on the third Monday of every month          |
 
-> https://crontab.guru is a great tool to help create cron expressions.
+https://crontab.guru is a great tool to help create cron expressions.
