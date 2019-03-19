@@ -26,6 +26,7 @@ bin/
 obj/
 temp/
 publish/
+dist/
 wwwroot/
 Properties/
 Settings/
@@ -86,3 +87,4 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+global.json
