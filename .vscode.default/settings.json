@@ -1,11 +1,16 @@
 {
+  "debug.toolBarLocation": "docked",
   "editor.fontSize": 12,
   "editor.minimap.enabled": false,
   "editor.rulers": [140],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "files.exclude": {
     "**/.vs": true,
+    "**/.vscode": true,
     "**/.vscode.default": true,
     "**/bin": true,
     "**/obj": true,
@@ -17,5 +22,8 @@
   },
   "[markdown]": {
     "files.trimTrailingWhitespace": false
+  },
+  "[csharp]": {
+    "editor.tabSize": 4
   }
 }
