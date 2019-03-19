@@ -1,5 +1,5 @@
-## [v1.1.0](https://github.com/logiqsystem/cronquery/releases/tag/v1.1.0) (2019-03-18)
-### Bug fixes:
+## [v1.1.0](https://github.com/logiqsystem/cronquery/releases/tag/v1.1.0) (2019-03-19)
+### Features:
 - Add support for `netcoreapp3.0`
 - Support for UTC offset to configure the time zone
 
