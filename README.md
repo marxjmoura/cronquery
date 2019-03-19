@@ -53,13 +53,13 @@ public void ConfigureServices(IServiceCollection services)
     services.AddTransient<MyThirdJob>();
 }
 
- public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
- {
-     app.UseCronQuery()
-      .Enqueue<MyFirstJob>()
-      .Enqueue<MySecondJob>()
-      .Enqueue<MyThirdJob>()
-      .StartWith(appLifetime);
+public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
+{
+    app.UseCronQuery()
+     .Enqueue<MyFirstJob>()
+     .Enqueue<MySecondJob>()
+     .Enqueue<MyThirdJob>()
+     .StartWith(appLifetime);
 }
 ```
 
@@ -109,7 +109,7 @@ Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific
 | `CronQuery.TimeZone`       | System time zone ID or a custom UTC offset, e.g. `UTC-03:00`, `UTC+01:00`. |
 | `CronQuery.Jobs[].Name`    | Job class name.                                                            |
 | `CronQuery.Jobs[].Running` | Turn on (`true`) or turn off (`false`) the job.                            |
-| `CronQuery.Jobs[].Cron`    | CRON expression that triggers the job.                                     |
+| `CronQuery.Jobs[].Cron`    | Cron expression that triggers the job.                                     |
 
 ## Contact us
 
