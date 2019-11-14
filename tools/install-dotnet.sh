@@ -7,7 +7,4 @@ tar_gz="https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$version/dotnet-sdk-$
 
 curl -SL -o dotnet.tar.gz $tar_gz
 sudo mkdir -p /usr/share/dotnet
-
-if [[ ! -L /usr/share/dotnet ]]; then
-  sudo ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
-fi
+sudo ln -sfn /usr/share/dotnet/dotnet /usr/bin/dotnet
