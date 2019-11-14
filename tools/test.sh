@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd $(dirname $0)/../src/tests
 
 # https://github.com/dotnet/corefx/issues/5660
