@@ -5,17 +5,16 @@
     <AssemblyTitle>CronQuery</AssemblyTitle>
     <AssemblyVersion>1.1.0</AssemblyVersion>
     <Version>1.1.0</Version>
-    <Authors>Marx JMoura</Authors>
-    <Company>LogiQ System</Company>
-    <Owners>LogiQ System</Owners>
-    <Copyright>Copyright © 2018 LogiQ System</Copyright>
+    <Authors>Marx J. Moura</Authors>
+    <Owners>Marx J. Moura</Owners>
+    <Copyright>Copyright (c) 2018 Marx J. Moura</Copyright>
     <Description>Lightweight job runner for ASP.NET Core.</Description>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/logiqsystem/cronquery</RepositoryUrl>
+    <RepositoryUrl>https://github.com/marxjmoura/cronquery</RepositoryUrl>
     <PackageId>CronQuery</PackageId>
-    <PackageProjectUrl>https://github.com/logiqsystem/cronquery</PackageProjectUrl>
-    <PackageLicense>https://github.com/logiqsystem/cronquery/blob/master/LICENSE</PackageLicense>
-    <PackageReleaseNotes>https://github.com/logiqsystem/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/marxjmoura/cronquery</PackageProjectUrl>
+    <PackageLicense>https://github.com/marxjmoura/cronquery/blob/master/LICENSE</PackageLicense>
+    <PackageReleaseNotes>https://github.com/marxjmoura/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>job runner;background tasks;scheduler</PackageTags>
   </PropertyGroup>
