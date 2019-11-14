@@ -2,14 +2,14 @@
 
 Lightweight job runner for ASP.NET Core.
 
-[![CircleCI](https://circleci.com/gh/logiqsystem/cronquery.svg?style=shield)](https://circleci.com/gh/logiqsystem/cronquery)
-[![codecov](https://codecov.io/gh/logiqsystem/cronquery/branch/master/graph/badge.svg)](https://codecov.io/gh/logiqsystem/cronquery)
+[![CircleCI](https://circleci.com/gh/marxjmoura/cronquery.svg?style=shield)](https://circleci.com/gh/marxjmoura/cronquery)
+[![codecov](https://codecov.io/gh/marxjmoura/cronquery/branch/master/graph/badge.svg)](https://codecov.io/gh/marxjmoura/cronquery)
 [![NuGet Version](https://img.shields.io/nuget/v/cronquery.svg)](https://img.shields.io/nuget/v/cronquery.svg)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/cronquery.svg)](https://www.nuget.org/packages/cronquery)
 
 ## Release notes
 
-For release notes refer to [CHANGELOG](https://github.com/logiqsystem/cronquery/blob/master/CHANGELOG.md).
+For release notes refer to [CHANGELOG](https://github.com/marxjmoura/cronquery/blob/master/CHANGELOG.md).
 
 ## Installation
 
@@ -111,6 +111,8 @@ Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific
 | `CronQuery.Jobs[].Running` | Turn on (`true`) or turn off (`false`) the job.                            |
 | `CronQuery.Jobs[].Cron`    | Cron expression that triggers the job.                                     |
 
-## Contact us
+## License
 
-If you have any questions, detect a bug or need a new feature, please, fell free to [open a new issue](https://github.com/logiqsystem/cronquery/issues) on GitHub.
+[MIT](https://github.com/marxjmoura/cronquery/blob/master/LICENSE)
+
+Copyright (c) 2018-present, [Marx J. Moura](https://github.com/marxjmoura)
