@@ -1,16 +1,18 @@
 version : 2.1
-default: &default
-  machine:
-    image: circleci/classic:latest
+
+executors:
+  ubuntu:
+    machine:
+      image: circleci/classic:latest
+
 jobs:
   build:
-    <<: *default
+    executor: ubuntu
     steps:
       - checkout
-      - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
-      - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
-      - run: bash devops/tools/dotnet.sh install -v sdk-3.0 -o ubuntu-14.04
-      - run: bash devops/tools/dotnet.sh test
+      - run: ./tools/install-dotnet.sh 3.0.100-preview4-011223
+      - run: ./tools/install-dotnet.sh 2.2.203
+      - run: ./tools/test.sh
       - run: curl -s https://codecov.io/bash > ./codecov
       - run: chmod +x ./codecov
       - run: ./codecov -f "./src/tests/coverage/opencover.xml" -t $CODECOV_TOKEN
@@ -18,14 +20,14 @@ jobs:
           path: src/tests/coverage/report
           destination: coverage
   deploy:
-    <<: *default
+    executor: ubuntu
     steps:
       - checkout
-      - run: git clone https://$GIT_TOKEN@github.com/logiqsystem/devops.git
-      - run: bash devops/tools/dotnet.sh install -v sdk-2.2 -o ubuntu-14.04
-      - run: bash devops/tools/dotnet.sh install -v sdk-3.0 -o ubuntu-14.04
+      - run: ./tools/install-dotnet.sh 3.0.100-preview4-011223
+      - run: ./tools/install-dotnet.sh 2.2.203
       - run: dotnet pack src/api/api.csproj -o dist
       - run: dotnet nuget push dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
+
 workflows:
   version: 2.1
   build_and_deploy:
