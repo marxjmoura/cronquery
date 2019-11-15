@@ -101,7 +101,7 @@ Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific
 }
 ```
 
-> Whenever you save the `appsettings.json` CronQuery immediately assumes the new configuration.
+Whenever you save the `appsettings.json` CronQuery immediately assumes the new configuration.
 
 | Property                   | Description                                                                |
 |----------------------------|----------------------------------------------------------------------------|
@@ -110,6 +110,10 @@ Schedule your jobs using [cron expressions](CRON.md) of six fields to a specific
 | `CronQuery.Jobs[].Name`    | Job class name.                                                            |
 | `CronQuery.Jobs[].Running` | Turn on (`true`) or turn off (`false`) the job.                            |
 | `CronQuery.Jobs[].Cron`    | Cron expression that triggers the job.                                     |
+
+## Bugs and features
+
+Please, fell free to [open a new issue](https://github.com/marxjmoura/cronquery/issues/new) on GitHub.
 
 ## License
 
