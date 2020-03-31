@@ -50,16 +50,7 @@ public void ConfigureServices(IServiceCollection services)
 
     services.AddTransient<MyFirstJob>();
     services.AddTransient<MySecondJob>();
-    services.AddTransient<MyThirdJob>();
-}
-
-public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
-{
-    app.UseCronQuery()
-     .Enqueue<MyFirstJob>()
-     .Enqueue<MySecondJob>()
-     .Enqueue<MyThirdJob>()
-     .StartWith(appLifetime);
+    services.AddSingleton<MyThirdJob>();
 }
 ```
 
