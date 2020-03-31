@@ -1,52 +1,58 @@
-###################
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.pdb
-*.dll.config
-*.cache
-*.suo
-# Include dlls if they are in the NuGet packages directory
-!/packages/*/lib/*.dll
-!/packages/*/lib/*/*.dll
-# Include dlls if they're in the CommonReferences directory
-!*CommonReferences/*.dll
-####################
-# VS Upgrade stuff #
-####################
-UpgradeLog.XML
-_UpgradeReport_Files/
-###############
-# Directories #
-###############
+# project directories
+packages/
+node_modules/
 bin/
 obj/
 temp/
-publish/
 dist/
+mock/
 wwwroot/
+publish/
+gh-pages/
 Properties/
 Settings/
 TestResults/
+tests/e2e/videos/
+tests/e2e/screenshots/
 coverage/
-.vscode/
-###################
-# Web publish log #
-###################
-*.Publish.xml
-#############
-# Resharper #
-#############
+
+# log files
+*.log
+*.sqlite
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# compiled source
+*.cache
+*.com
+*.class
+*.dll
+*.dll.config
+*.exe
+*.pdb
+
+# editor directories and files
+.idea
+.vs
+.vscode
+*.ntvs*
+*.njsproj
+*.sln
+*.suo
+*.sw?
+*.user
+UpgradeLog.XML
+_UpgradeReport_Files/
 /_ReSharper.*
 *.ReSharper.*
-############
-# Packages #
-############
-# It's better to unpack these files and commit the raw source
-# Git has its own built in compression methods
+
+# system files
+.DS_Store?
+Thumbs.db
+
+# package files
+*.nupkg
 *.7z
 *.dmg
 *.gz
@@ -55,36 +61,3 @@ coverage/
 *.rar
 *.tar
 *.zip
-######################
-# Logs and reports #
-######################
-*.log
-*.sqlite
-clover.xml
-codecov
-coverage.hits
-coverage.json
-######################
-# OS generated files #
-######################
-.DS_Store?
-ehthumbs.db
-Icon?
-Thumbs.db
-[Bb]in
-[Oo]bj
-[Tt]est[Rr]esults
-.vs
-*.suo
-*.user
-*.[Cc]ache
-*[Rr]esharper*
-packages
-NuGet.exe
-_[Ss]cripts
-*.exe
-*.dll
-*.nupkg
-*.ncrunchsolution
-*.dot[Cc]over
-global.json
