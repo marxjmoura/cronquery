@@ -24,11 +24,11 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.TestHost;
-using tests.Fakes;
-using tests.Fakes.Jobs;
+using CronQuery.Tests.Fakes;
+using CronQuery.Tests.Fakes.Jobs;
 using Xunit;
 
-namespace tests.Functional
+namespace CronQuery.Tests.Functional
 {
     public class AppTest
     {

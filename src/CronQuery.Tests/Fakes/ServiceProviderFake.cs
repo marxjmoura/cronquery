@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using CronQuery.Mvc.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace tests.Fakes
+namespace CronQuery.Tests.Fakes
 {
     public class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
     {

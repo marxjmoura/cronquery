@@ -24,7 +24,7 @@
 
 using Microsoft.Extensions.Logging;
 
-namespace tests.Fakes
+namespace CronQuery.Tests.Fakes
 {
     public class LoggerFactoryFake : ILoggerFactory
     {

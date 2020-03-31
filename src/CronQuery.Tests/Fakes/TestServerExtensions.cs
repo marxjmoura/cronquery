@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace tests.Fakes
+namespace CronQuery.Tests.Fakes
 {
     public static class TestServerExtensions
     {

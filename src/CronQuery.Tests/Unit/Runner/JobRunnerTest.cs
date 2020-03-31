@@ -27,11 +27,11 @@ using System.Threading.Tasks;
 using CronQuery.API.Mvc.Jobs;
 using CronQuery.Mvc.Jobs;
 using Microsoft.Extensions.DependencyInjection;
-using tests.Fakes;
-using tests.Fakes.Jobs;
+using CronQuery.Tests.Fakes;
+using CronQuery.Tests.Fakes.Jobs;
 using Xunit;
 
-namespace tests.Unit.Runner
+namespace CronQuery.Tests.Unit.Runner
 {
     public class JobRunnerTest
     {

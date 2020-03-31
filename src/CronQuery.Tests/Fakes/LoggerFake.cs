@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace tests.Fakes
+namespace CronQuery.Tests.Fakes
 {
     public class LoggerFake : ILogger
     {
