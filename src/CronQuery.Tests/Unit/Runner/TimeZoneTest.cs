@@ -26,7 +26,7 @@ using CronQuery.Mvc.Options;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace tests.Unit.Runner
+namespace CronQuery.Tests.Unit.Runner
 {
     public class TimeZoneTest
     {

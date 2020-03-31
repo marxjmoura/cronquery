@@ -26,7 +26,7 @@ using System;
 using CronQuery.Cron;
 using Xunit;
 
-namespace tests.Unit.Cron
+namespace CronQuery.Tests.Unit.Cron
 {
     public class ExpressionWithDashTest
     {

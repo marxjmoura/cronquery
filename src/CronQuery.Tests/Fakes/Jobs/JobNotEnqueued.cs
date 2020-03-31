@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
 using CronQuery.Mvc.Options;
 
-namespace tests.Fakes.Jobs
+namespace CronQuery.Tests.Fakes.Jobs
 {
     public class JobNotEnqueued : IJob
     {

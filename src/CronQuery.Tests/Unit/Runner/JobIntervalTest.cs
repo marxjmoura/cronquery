@@ -28,7 +28,7 @@ using CronQuery.Cron;
 using CronQuery.Mvc.Jobs;
 using Xunit;
 
-namespace tests.Unit.Runner
+namespace CronQuery.Tests.Unit.Runner
 {
     public class JobIntervalTest
     {

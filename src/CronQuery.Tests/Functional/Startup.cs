@@ -28,10 +28,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using tests.Fakes;
-using tests.Fakes.Jobs;
+using CronQuery.Tests.Fakes;
+using CronQuery.Tests.Fakes.Jobs;
 
-namespace tests.Functional
+namespace CronQuery.Tests.Functional
 {
     public class Startup
     {

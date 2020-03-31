@@ -28,7 +28,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
-namespace tests.Functional
+namespace CronQuery.Tests.Functional
 {
     public class Program
     {
