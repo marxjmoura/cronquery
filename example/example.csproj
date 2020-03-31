@@ -6,6 +6,6 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\api\api.csproj" />
+    <ProjectReference Include="..\CronQuery.API\CronQuery.API.csproj" />
   </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\api\api.csproj" />
+    <ProjectReference Include="..\CronQuery.API\CronQuery.API.csproj" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="altcover.dotnet" Version="5.0.665" />
