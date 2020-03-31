@@ -25,7 +25,7 @@ jobs:
       - checkout
       - run: ./tools/install-dotnet.sh 3.0.100-preview4-011223
       - run: ./tools/install-dotnet.sh 2.2.203
-      - run: dotnet pack src/api/api.csproj -o dist
+      - run: dotnet pack src/CronQuery.API/CronQuery.API.csproj -o dist
       - run: dotnet nuget push dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 
 workflows:
