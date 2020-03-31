@@ -56,7 +56,7 @@ namespace tests.Fakes
                 return _instances[serviceType];
             }
 
-            return this;
+            return null;
         }
     }
 }

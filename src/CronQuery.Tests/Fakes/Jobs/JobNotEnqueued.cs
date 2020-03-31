@@ -28,7 +28,7 @@ using CronQuery.Mvc.Options;
 
 namespace tests.Fakes.Jobs
 {
-    public class JobNotConfigured : IJob
+    public class JobNotEnqueued : IJob
     {
         public Task RunAsync()
         {
@@ -41,6 +41,12 @@ namespace tests.Fakes.Jobs
             {
                 var options = new JobRunnerOptions();
                 options.Running = true;
+                options.Jobs.Add(new JobOptions
+                {
+                    Running = true,
+                    Name = nameof(JobNotEnqueued),
+                    Cron = "* * * * * *"
+                });
 
                 return options;
             }

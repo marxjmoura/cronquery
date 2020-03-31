@@ -52,11 +52,6 @@ namespace example
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
-            app.UseCronQuery()
-                .Enqueue<MyFirstJob>()
-                .Enqueue<MySecondJob>()
-                .StartWith(appLifetime);
-
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }

@@ -51,7 +51,7 @@ namespace tests.Functional
                 message == $"Job '{nameof(JobWithError)}' failed during running.");
 
             Assert.Contains(_server.Logger().Messages, message =>
-                message == $"No job configuration matches '{nameof(JobNotConfigured)}'.");
+                message == $"Job {nameof(JobNotEnqueued)} not enqueued.");
 
             Assert.Contains(_server.Logger().Messages, message =>
                 message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
