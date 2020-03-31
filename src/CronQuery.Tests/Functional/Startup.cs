@@ -51,19 +51,11 @@ namespace tests.Functional
             services.AddSingleton<JobSuccessful>();
             services.AddSingleton<JobBadlyConfigured>();
             services.AddSingleton<JobWithError>();
-            services.AddSingleton<JobNotConfigured>();
             services.AddSingleton<JobStopped>();
         }
 
         public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
-            app.UseCronQuery()
-                .Enqueue<JobSuccessful>()
-                .Enqueue<JobBadlyConfigured>()
-                .Enqueue<JobWithError>()
-                .Enqueue<JobNotConfigured>()
-                .Enqueue<JobStopped>()
-                .StartWith(appLifetime);
         }
     }
 }

@@ -26,52 +26,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using CronQuery.API.Mvc.Jobs;
 using CronQuery.Cron;
 using CronQuery.Mvc.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace CronQuery.Mvc.Jobs
 {
-    public sealed class JobRunner
+    public sealed class JobRunner : IHostedService
     {
+        private readonly ICollection<IDisposable> _timers;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ICollection<IDisposable> _timers;
-        private readonly ICollection<Type> _jobs;
+        private readonly JobCollection _jobs;
 
         private JobRunnerOptions _options;
 
-        public JobRunner(IOptionsMonitor<JobRunnerOptions> options, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
+        public JobRunner(IOptionsMonitor<JobRunnerOptions> options, JobCollection jobs,
+            IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
         {
+            _timers = new List<IDisposable>();
             _options = options?.CurrentValue ?? throw new ArgumentNullException(nameof(options));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            _timers = new List<IDisposable>();
-            _jobs = new List<Type>();
+            _jobs = jobs ?? throw new ArgumentNullException(nameof(jobs));
 
             options.OnChange(Restart);
         }
 
-        public IEnumerable<Type> Jobs => _jobs;
-
-        public void Enqueue<TJob>() where TJob : IJob
+        public async Task RunAsync(string jobName)
         {
-            _jobs.Add(typeof(TJob));
-        }
+            var service = _jobs.SingleOrDefault(service => service.ServiceType.Name == jobName);
 
-        public async Task RunAsync(Type job)
-        {
-            if (!_jobs.Contains(job))
+            if (service == null)
             {
-                throw new ArgumentException($"Job {job.Name} not enqueued.");
+                _loggerFactory.CreateLogger(GetType().FullName)
+                    .LogError($"Job {jobName} not enqueued.");
+
+                return;
             }
 
             using (var scope = _serviceProvider.CreateScope())
             {
-                var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(job));
+                var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(service.ServiceType));
 
                 try
                 {
@@ -79,8 +81,8 @@ namespace CronQuery.Mvc.Jobs
                 }
                 catch (Exception error)
                 {
-                    var logger = _loggerFactory.CreateLogger(job.FullName);
-                    logger.LogError(error, $"Job '{job.Name}' failed during running.");
+                    _loggerFactory.CreateLogger(GetType().FullName)
+                        .LogError(error, $"Job '{service.ServiceType.Name}' failed during running.");
                 }
                 finally
                 {
@@ -98,34 +100,24 @@ namespace CronQuery.Mvc.Jobs
 
             var timeZone = new TimeZoneOptions(_options.TimeZone).ToTimeZoneInfo();
 
-            foreach (var job in Jobs)
+            foreach (var job in _options.Jobs)
             {
-                var config = _options.Jobs.SingleOrDefault(entry => entry.Name == job.Name);
-
-                if (config == null)
-                {
-                    var logger = _loggerFactory.CreateLogger(job.FullName);
-                    logger.LogWarning($"No job configuration matches '{job.Name}'.");
-
-                    continue;
-                }
-
-                if (!config.Running)
+                if (!job.Running)
                 {
                     continue;
                 }
 
-                var cron = new CronExpression(config.Cron);
+                var cron = new CronExpression(job.Cron);
 
                 if (!cron.IsValid)
                 {
-                    var logger = _loggerFactory.CreateLogger(job.FullName);
+                    var logger = _loggerFactory.CreateLogger(job.Name);
                     logger.LogWarning($"Invalid cron expression for '{job.Name}'.");
 
                     continue;
                 }
 
-                var timer = new JobInterval(cron, timeZone, async () => await RunAsync(job));
+                var timer = new JobInterval(cron, timeZone, async () => await RunAsync(job.Name));
 
                 _timers.Add(timer);
 
@@ -149,6 +141,20 @@ namespace CronQuery.Mvc.Jobs
 
             Stop();
             Start();
+        }
+
+        Task IHostedService.StartAsync(CancellationToken cancellationToken)
+        {
+            Start();
+
+            return Task.CompletedTask;
+        }
+
+        Task IHostedService.StopAsync(CancellationToken cancellationToken)
+        {
+            Stop();
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
+using CronQuery.API.Mvc.Jobs;
 using CronQuery.Mvc.Jobs;
 using CronQuery.Mvc.Options;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,15 +34,12 @@ namespace CronQuery.Mvc.DependencyInjection
     {
         public static void AddCronQuery(this IServiceCollection services, IConfigurationSection configuration)
         {
-            services.AddSingleton<JobRunner>();
             services.Configure<JobRunnerOptions>(configuration);
-        }
 
-        public static CronQuerySetup UseCronQuery(this IApplicationBuilder app)
-        {
-            var runner = app.ApplicationServices.GetRequiredService<JobRunner>();
+            services.AddSingleton<JobRunner>();
+            services.AddSingleton<JobCollection>(serviceProvider => new JobCollection(services));
 
-            return new CronQuerySetup(runner);
+            services.AddHostedService<JobRunner>();
         }
     }
 }
