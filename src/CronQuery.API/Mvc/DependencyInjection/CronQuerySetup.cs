@@ -43,18 +43,10 @@ namespace CronQuery.Mvc.DependencyInjection
             return this;
         }
 
-        #if NETCOREAPP3_0
         public void StartWith(IHostApplicationLifetime appLifetime)
         {
             appLifetime.ApplicationStarted.Register(runner.Start);
             appLifetime.ApplicationStopping.Register(runner.Stop);
         }
-        #else
-        public void StartWith(IApplicationLifetime appLifetime)
-        {
-            appLifetime.ApplicationStarted.Register(runner.Start);
-            appLifetime.ApplicationStopping.Register(runner.Stop);
-        }
-        #endif
     }
 }
