@@ -42,7 +42,7 @@ namespace example
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddControllers();
 
             services.AddCronQuery(Configuration.GetSection("CronQuery"));
 
@@ -50,14 +50,15 @@ namespace example
             services.AddTransient<MySecondJob>();
         }
 
-        public void Configure(IApplicationBuilder app, IApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
         {
-            app.UseMvc();
-
             app.UseCronQuery()
                 .Enqueue<MyFirstJob>()
                 .Enqueue<MySecondJob>()
                 .StartWith(appLifetime);
+
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
