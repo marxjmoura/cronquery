@@ -9,10 +9,6 @@ test_project_dir="CronQuery.Tests"
 
 cd $solution_dir/$test_project_dir
 
-echo -n 'Inotify Watchers: '
-sudo sysctl -n -w fs.inotify.max_user_instances=1024
-echo ''
-
 dotnet test \
   /p:AltCover="true" \
   /p:AltCoverForce="true" \
