@@ -5,8 +5,8 @@
     <NullableReferenceTypes>true</NullableReferenceTypes>
     <AssemblyName>CronQuery</AssemblyName>
     <AssemblyTitle>CronQuery</AssemblyTitle>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
-    <Version>1.1.0</Version>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <Version>2.0.0</Version>
     <Authors>Marx J. Moura</Authors>
     <Owners>Marx J. Moura</Owners>
     <Copyright>Copyright (c) 2018 Marx J. Moura</Copyright>
