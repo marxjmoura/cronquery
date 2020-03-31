@@ -7,9 +7,9 @@ Lightweight job runner for ASP.NET Core.
 [![NuGet Version](https://img.shields.io/nuget/v/cronquery.svg)](https://img.shields.io/nuget/v/cronquery.svg)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/cronquery.svg)](https://www.nuget.org/packages/cronquery)
 
-## Release notes
+## Changelog
 
-For release notes refer to [CHANGELOG](https://github.com/marxjmoura/cronquery/blob/master/CHANGELOG.md).
+The changes for each release are documented in the [release notes](https://github.com/marxjmoura/cronquery/releases).
 
 ## Installation
 
