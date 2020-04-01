@@ -29,7 +29,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CronQuery.Tests.Fakes
 {
-    public class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
+    public sealed class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
     {
         private readonly IDictionary<Type, object> _instances;
 

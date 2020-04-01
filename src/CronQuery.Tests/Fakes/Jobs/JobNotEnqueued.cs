@@ -28,7 +28,7 @@ using CronQuery.Mvc.Options;
 
 namespace CronQuery.Tests.Fakes.Jobs
 {
-    public class JobNotEnqueued : IJob
+    public sealed class JobNotEnqueued : IJob
     {
         public Task RunAsync()
         {

@@ -28,7 +28,7 @@ using CronQuery.Mvc.Options;
 
 namespace CronQuery.Tests.Fakes.Jobs
 {
-    public class JobStopped : IJob
+    public sealed class JobStopped : IJob
     {
         public bool Executed { get; private set; }
 

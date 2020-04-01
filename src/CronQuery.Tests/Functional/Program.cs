@@ -30,7 +30,7 @@ using System.IO;
 
 namespace CronQuery.Tests.Functional
 {
-    public class Program
+    public sealed class Program
     {
         public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
             .UseStartup<Startup>()

@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithDigitTest
+    public sealed class ExpressionWithDigitTest
     {
         [Fact]
         public void ShouldGetNextMinuteAfterLastSecond()

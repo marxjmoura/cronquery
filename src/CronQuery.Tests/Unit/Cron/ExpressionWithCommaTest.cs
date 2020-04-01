@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithCommaTest
+    public sealed class ExpressionWithCommaTest
     {
         [Fact]
         public void ShouldGetNextMinute()

@@ -29,7 +29,7 @@ using CronQuery.Mvc.Options;
 
 namespace CronQuery.Tests.Fakes.Jobs
 {
-    public class JobWithError : IJob
+    public sealed class JobWithError : IJob
     {
         public Task RunAsync()
         {

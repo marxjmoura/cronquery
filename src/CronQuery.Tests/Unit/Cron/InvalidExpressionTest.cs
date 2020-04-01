@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class InvalidExpressionTest
+    public sealed class InvalidExpressionTest
     {
         [Fact]
         public void ShouldNotEvaluateLowerThan6Fields()
