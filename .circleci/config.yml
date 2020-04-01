@@ -14,9 +14,9 @@ jobs:
       - run: ./tools/test.sh
       - run: curl -s https://codecov.io/bash > ./codecov
       - run: chmod +x ./codecov
-      - run: ./codecov -f "./src/tests/coverage/opencover.xml" -t $CODECOV_TOKEN
+      - run: ./codecov -f "./src/CronQuery.Tests/coverage/opencover.xml" -t $CODECOV_TOKEN
       - store_artifacts:
-          path: src/tests/coverage/report
+          path: src/CronQuery.Tests/coverage/report
           destination: coverage
   deploy:
     executor: ubuntu
