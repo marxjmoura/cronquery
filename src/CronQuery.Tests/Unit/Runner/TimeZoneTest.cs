@@ -28,7 +28,7 @@ using Xunit.Abstractions;
 
 namespace CronQuery.Tests.Unit.Runner
 {
-    public class TimeZoneTest
+    public sealed class TimeZoneTest
     {
         private readonly DateTime _mockUtcTime;
 

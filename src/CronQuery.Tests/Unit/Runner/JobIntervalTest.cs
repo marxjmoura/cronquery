@@ -30,7 +30,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Runner
 {
-    public class JobIntervalTest
+    public sealed class JobIntervalTest
     {
         [Fact]
         public void ShouldRunWork()

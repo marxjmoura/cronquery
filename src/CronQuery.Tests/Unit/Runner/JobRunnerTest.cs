@@ -33,7 +33,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Runner
 {
-    public class JobRunnerTest
+    public sealed class JobRunnerTest
     {
         private readonly LoggerFactoryFake _loggerFactory;
         private readonly ServiceCollection _serviceCollection;

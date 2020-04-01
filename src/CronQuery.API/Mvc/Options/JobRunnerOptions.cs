@@ -26,7 +26,7 @@ using System.Collections.Generic;
 
 namespace CronQuery.Mvc.Options
 {
-    public class JobRunnerOptions
+    public sealed class JobRunnerOptions
     {
         public bool Running { get; set; }
         public string TimeZone { get; set; }

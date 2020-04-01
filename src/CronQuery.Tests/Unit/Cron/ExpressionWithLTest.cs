@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithLTest
+    public sealed class ExpressionWithLTest
     {
         [Fact]
         public void ShouldGetNextLastDayInJanuary()

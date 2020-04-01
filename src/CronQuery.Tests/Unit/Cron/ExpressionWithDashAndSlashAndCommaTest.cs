@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithDashAndSlashAndCommaTest
+    public sealed class ExpressionWithDashAndSlashAndCommaTest
     {
         [Fact]
         public void ShouldGetNextSecond()

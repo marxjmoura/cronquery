@@ -33,7 +33,7 @@ using CronQuery.Tests.Fakes.Jobs;
 
 namespace CronQuery.Tests.Functional
 {
-    public class Startup
+    public sealed class Startup
     {
         public Startup(IConfiguration configuration)
         {

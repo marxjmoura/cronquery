@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithAsteriskTest
+    public sealed class ExpressionWithAsteriskTest
     {
         [Fact]
         public void ShouldGetNextSecond()

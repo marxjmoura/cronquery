@@ -27,7 +27,7 @@ using System.Text.RegularExpressions;
 
 namespace CronQuery.Mvc.Options
 {
-    public class TimeZoneOptions
+    public sealed class TimeZoneOptions
     {
         const string UtcOffsetRegex = @"^UTC[+-]\d{2}:\d{2}$";
 

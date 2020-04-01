@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CronQuery.API.Mvc.Jobs
 {
-    public class JobCollection : IEnumerable<ServiceDescriptor>
+    public sealed class JobCollection : IEnumerable<ServiceDescriptor>
     {
         private readonly IList<ServiceDescriptor> _descriptors;
 

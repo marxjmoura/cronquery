@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class ExpressionWithWTest
+    public sealed class ExpressionWithWTest
     {
         [Fact]
         public void ShouldGetNearestWeekdayFromSaturday()

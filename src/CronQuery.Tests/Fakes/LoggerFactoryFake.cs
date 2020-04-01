@@ -26,7 +26,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CronQuery.Tests.Fakes
 {
-    public class LoggerFactoryFake : ILoggerFactory
+    public sealed class LoggerFactoryFake : ILoggerFactory
     {
         public LoggerFake Logger { get; } = new LoggerFake();
 

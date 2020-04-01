@@ -28,7 +28,7 @@ using Microsoft.Extensions.Options;
 
 namespace CronQuery.Tests.Fakes
 {
-    public class OptionsMonitorFake : IOptionsMonitor<JobRunnerOptions>, IDisposable
+    public sealed class OptionsMonitorFake : IOptionsMonitor<JobRunnerOptions>, IDisposable
     {
         private JobRunnerOptions _options;
         private Action<JobRunnerOptions, string> _listener;

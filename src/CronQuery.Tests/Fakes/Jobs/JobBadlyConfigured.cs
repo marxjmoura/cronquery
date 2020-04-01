@@ -4,7 +4,7 @@ using CronQuery.Mvc.Options;
 
 namespace CronQuery.Tests.Fakes.Jobs
 {
-    public class JobBadlyConfigured : IJob
+    public sealed class JobBadlyConfigured : IJob
     {
         public Task RunAsync()
         {

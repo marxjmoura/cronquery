@@ -29,7 +29,7 @@ using CronQuery.Mvc.Options;
 
 namespace CronQuery.Tests.Fakes.Jobs
 {
-    public class JobSuccessful : IJob, IDisposable
+    public sealed class JobSuccessful : IJob, IDisposable
     {
         public bool Executed { get; private set; }
 

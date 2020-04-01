@@ -28,7 +28,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Unit.Cron
 {
-    public class UnreachableConditionTest
+    public sealed class UnreachableConditionTest
     {
         [Fact]
         public void ShouldNotEvaluateNearestWeekdayOnlyOnSunday()

@@ -30,7 +30,7 @@ using Xunit;
 
 namespace CronQuery.Tests.Functional
 {
-    public class AppTest
+    public sealed class AppTest
     {
         private readonly TestServer _server;
 
