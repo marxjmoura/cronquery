@@ -111,8 +111,8 @@ namespace CronQuery.Mvc.Jobs
 
                 if (!cron.IsValid)
                 {
-                    var logger = _loggerFactory.CreateLogger(job.Name);
-                    logger.LogWarning($"Invalid cron expression for '{job.Name}'.");
+                    _loggerFactory.CreateLogger(GetType().FullName)
+                        .LogWarning($"Invalid cron expression for '{job.Name}'.");
 
                     continue;
                 }
