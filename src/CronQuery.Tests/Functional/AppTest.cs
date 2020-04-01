@@ -51,7 +51,7 @@ namespace CronQuery.Tests.Functional
                 message == $"Job '{nameof(JobWithError)}' failed during running.");
 
             Assert.Contains(_server.Logger().Messages, message =>
-                message == $"Job {nameof(JobNotEnqueued)} not enqueued.");
+                message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
 
             Assert.Contains(_server.Logger().Messages, message =>
                 message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");

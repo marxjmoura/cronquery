@@ -66,7 +66,7 @@ namespace CronQuery.Mvc.Jobs
             if (service == null)
             {
                 _loggerFactory.CreateLogger(GetType().FullName)
-                    .LogError($"Job {jobName} not enqueued.");
+                    .LogWarning($"Job {jobName} is not in the queue.");
 
                 return;
             }
