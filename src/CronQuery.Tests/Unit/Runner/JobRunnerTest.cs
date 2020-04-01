@@ -86,7 +86,7 @@ namespace CronQuery.Tests.Unit.Runner
             Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
             Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job {nameof(JobNotEnqueued)} not enqueued.");
+                message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
         }
 
         [Fact]
@@ -219,7 +219,7 @@ namespace CronQuery.Tests.Unit.Runner
             await jobRunner.RunAsync(nameof(JobNotEnqueued));
 
             Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job {nameof(JobNotEnqueued)} not enqueued.");
+                message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
         }
 
         [Fact]
