@@ -22,139 +22,132 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CronQuery.API.Mvc.Jobs;
+namespace CronQuery.Mvc.Jobs;
+
 using CronQuery.Cron;
 using CronQuery.Mvc.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Reactive.Linq;
 
-namespace CronQuery.Mvc.Jobs
+public sealed class JobRunner : IHostedService
 {
-    public sealed class JobRunner : IHostedService
+    private readonly ICollection<IDisposable> _timers;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILoggerFactory _loggerFactory;
+    private readonly JobCollection _jobs;
+
+    private JobRunnerOptions _options;
+
+    public JobRunner(IOptionsMonitor<JobRunnerOptions> options, JobCollection jobs,
+        IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
     {
-        private readonly ICollection<IDisposable> _timers;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly JobCollection _jobs;
+        _timers = new List<IDisposable>();
+        _options = options?.CurrentValue ?? throw new ArgumentNullException(nameof(options));
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        _jobs = jobs ?? throw new ArgumentNullException(nameof(jobs));
 
-        private JobRunnerOptions _options;
+        options.OnChange(Restart);
+    }
 
-        public JobRunner(IOptionsMonitor<JobRunnerOptions> options, JobCollection jobs,
-            IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
+    public async Task RunAsync(string jobName)
+    {
+        var service = _jobs.SingleOrDefault(service => service.ServiceType.Name == jobName);
+
+        if (service == null)
         {
-            _timers = new List<IDisposable>();
-            _options = options?.CurrentValue ?? throw new ArgumentNullException(nameof(options));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            _jobs = jobs ?? throw new ArgumentNullException(nameof(jobs));
+            _loggerFactory.CreateLogger(GetType().FullName!)
+                .LogWarning($"Job {jobName} is not in the queue.");
 
-            options.OnChange(Restart);
+            return;
         }
 
-        public async Task RunAsync(string jobName)
+        using (var scope = _serviceProvider.CreateScope())
         {
-            var service = _jobs.SingleOrDefault(service => service.ServiceType.Name == jobName);
+            var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(service.ServiceType));
 
-            if (service == null)
+            try
             {
-                _loggerFactory.CreateLogger(GetType().FullName)
-                    .LogWarning($"Job {jobName} is not in the queue.");
-
-                return;
+                await jobInstance.RunAsync();
             }
-
-            using (var scope = _serviceProvider.CreateScope())
+            catch (Exception error)
             {
-                var jobInstance = ((IJob)scope.ServiceProvider.GetRequiredService(service.ServiceType));
-
-                try
+                _loggerFactory.CreateLogger(GetType().FullName!)
+                    .LogError(error, $"Job '{service.ServiceType.Name}' failed during running.");
+            }
+            finally
+            {
+                if (jobInstance is IDisposable disposable)
                 {
-                    await jobInstance.RunAsync();
-                }
-                catch (Exception error)
-                {
-                    _loggerFactory.CreateLogger(GetType().FullName)
-                        .LogError(error, $"Job '{service.ServiceType.Name}' failed during running.");
-                }
-                finally
-                {
-                    if (jobInstance is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
+                    disposable.Dispose();
                 }
             }
         }
+    }
 
-        public void Start()
+    public void Start()
+    {
+        if (!_options.Running) return;
+
+        var timeZone = new TimeZoneOptions(_options.TimeZone).ToTimeZoneInfo();
+
+        foreach (var job in _options.Jobs)
         {
-            if (!_options.Running) return;
-
-            var timeZone = new TimeZoneOptions(_options.TimeZone).ToTimeZoneInfo();
-
-            foreach (var job in _options.Jobs)
+            if (!job.Running)
             {
-                if (!job.Running)
-                {
-                    continue;
-                }
-
-                var cron = new CronExpression(job.Cron);
-
-                if (!cron.IsValid)
-                {
-                    _loggerFactory.CreateLogger(GetType().FullName)
-                        .LogWarning($"Invalid cron expression for '{job.Name}'.");
-
-                    continue;
-                }
-
-                var timer = new JobInterval(cron, timeZone, async () => await RunAsync(job.Name));
-
-                _timers.Add(timer);
-
-                timer.Run();
-            }
-        }
-
-        public void Stop()
-        {
-            foreach (var timer in _timers)
-            {
-                timer.Dispose();
+                continue;
             }
 
-            _timers.Clear();
-        }
+            var cron = new CronExpression(job.Cron);
 
-        private void Restart(JobRunnerOptions options)
+            if (!cron.IsValid)
+            {
+                _loggerFactory.CreateLogger(GetType().FullName!)
+                    .LogWarning($"Invalid cron expression for '{job.Name}'.");
+
+                continue;
+            }
+
+            var timer = new JobInterval(cron, timeZone, async () => await RunAsync(job.Name));
+
+            _timers.Add(timer);
+
+            timer.Run();
+        }
+    }
+
+    public void Stop()
+    {
+        foreach (var timer in _timers)
         {
-            _options = options;
-
-            Stop();
-            Start();
+            timer.Dispose();
         }
 
-        Task IHostedService.StartAsync(CancellationToken cancellationToken)
-        {
-            Start();
+        _timers.Clear();
+    }
 
-            return Task.CompletedTask;
-        }
+    private void Restart(JobRunnerOptions options)
+    {
+        _options = options;
 
-        Task IHostedService.StopAsync(CancellationToken cancellationToken)
-        {
-            Stop();
+        Stop();
+        Start();
+    }
 
-            return Task.CompletedTask;
-        }
+    Task IHostedService.StartAsync(CancellationToken cancellationToken)
+    {
+        Start();
+
+        return Task.CompletedTask;
+    }
+
+    Task IHostedService.StopAsync(CancellationToken cancellationToken)
+    {
+        Stop();
+
+        return Task.CompletedTask;
     }
 }

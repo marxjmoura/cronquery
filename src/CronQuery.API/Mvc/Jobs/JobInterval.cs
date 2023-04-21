@@ -22,54 +22,52 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
+namespace CronQuery.Mvc.Jobs;
+
 using CronQuery.Cron;
+using System.Reactive.Linq;
 
-namespace CronQuery.Mvc.Jobs
+public sealed class JobInterval : IDisposable
 {
-    public sealed class JobInterval : IDisposable
+    private readonly CronExpression _cron;
+    private readonly TimeZoneInfo _timezone;
+    private readonly Func<Task> _work;
+
+    private IDisposable _subscription = null!;
+
+    public JobInterval(CronExpression cron, TimeZoneInfo timezone, Func<Task> work)
     {
-        private CronExpression _cron;
-        private TimeZoneInfo _timezone;
-        private Func<Task> _work;
-        private IDisposable _subscription;
+        _cron = cron ?? throw new ArgumentNullException(nameof(cron));
+        _timezone = timezone ?? throw new ArgumentNullException(nameof(timezone));
+        _work = work ?? throw new ArgumentNullException(nameof(work));
+    }
 
-        public JobInterval(CronExpression cron, TimeZoneInfo timezone, Func<Task> work)
+    public void Dispose()
+    {
+        if (_subscription != null)
         {
-            _cron = cron ?? throw new ArgumentNullException(nameof(cron));
-            _timezone = timezone ?? throw new ArgumentNullException(nameof(timezone));
-            _work = work ?? throw new ArgumentNullException(nameof(work));
+            _subscription.Dispose();
+        }
+    }
+
+    public void Run()
+    {
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _timezone);
+        var nextTime = _cron.Next(now);
+
+        if (nextTime == DateTime.MinValue)
+        {
+            return;
         }
 
-        public void Dispose()
-        {
-            if (_subscription != null)
-            {
-                _subscription.Dispose();
-            }
-        }
+        var interval = nextTime - now;
 
-        public void Run()
-        {
-            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _timezone);
-            var nextTime = _cron.Next(now);
-
-            if (nextTime == DateTime.MinValue)
-            {
-                return;
-            }
-
-            var interval = nextTime - now;
-
-            _subscription = Observable.Timer(interval)
-                .Select(tick => Observable.FromAsync(_work))
-                .Concat()
-                .Subscribe(
-                    onNext: tick => { /* noop */ },
-                    onCompleted: Run
-                );
-        }
+        _subscription = Observable.Timer(interval)
+            .Select(tick => Observable.FromAsync(_work))
+            .Concat()
+            .Subscribe(
+                onNext: tick => { /* noop */ },
+                onCompleted: Run
+            );
     }
 }

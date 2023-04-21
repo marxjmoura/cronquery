@@ -22,24 +22,22 @@
  * SOFTWARE.
  */
 
-using CronQuery.API.Mvc.Jobs;
+namespace CronQuery.Mvc.DependencyInjection;
+
 using CronQuery.Mvc.Jobs;
 using CronQuery.Mvc.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CronQuery.Mvc.DependencyInjection
+public static class CronQueryExtensions
 {
-    public static class CronQueryExtensions
+    public static void AddCronQuery(this IServiceCollection services, IConfigurationSection configuration)
     {
-        public static void AddCronQuery(this IServiceCollection services, IConfigurationSection configuration)
-        {
-            services.Configure<JobRunnerOptions>(configuration);
+        services.Configure<JobRunnerOptions>(configuration);
 
-            services.AddSingleton<JobRunner>();
-            services.AddSingleton<JobCollection>(serviceProvider => new JobCollection(services));
+        services.AddSingleton<JobRunner>();
+        services.AddSingleton<JobCollection>(serviceProvider => new JobCollection(services));
 
-            services.AddHostedService<JobRunner>();
-        }
+        services.AddHostedService<JobRunner>();
     }
 }

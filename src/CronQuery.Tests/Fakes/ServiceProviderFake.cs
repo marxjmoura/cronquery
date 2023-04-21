@@ -22,41 +22,38 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
+namespace CronQuery.Tests.Fakes;
+
 using CronQuery.Mvc.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CronQuery.Tests.Fakes
+public sealed class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
 {
-    public sealed class ServiceProviderFake : IServiceProvider, IServiceScopeFactory, IServiceScope
+    private readonly IDictionary<Type, object> _instances;
+
+    public ServiceProviderFake()
     {
-        private readonly IDictionary<Type, object> _instances;
+        _instances = new Dictionary<Type, object>();
+    }
 
-        public ServiceProviderFake()
+    public IServiceProvider ServiceProvider => this;
+
+    public IServiceScope CreateScope() => this;
+
+    public void Dispose() { }
+
+    public object? GetService(Type serviceType)
+    {
+        if (typeof(IJob).IsAssignableFrom(serviceType))
         {
-            _instances = new Dictionary<Type, object>();
-        }
-
-        public IServiceProvider ServiceProvider => this;
-
-        public IServiceScope CreateScope() => this;
-
-        public void Dispose() { }
-
-        public object GetService(Type serviceType)
-        {
-            if (typeof(IJob).IsAssignableFrom(serviceType))
+            if (!_instances.ContainsKey(serviceType))
             {
-                if (!_instances.ContainsKey(serviceType))
-                {
-                    _instances.Add(serviceType, Activator.CreateInstance(serviceType));
-                }
-
-                return _instances[serviceType];
+                _instances.Add(serviceType, Activator.CreateInstance(serviceType)!);
             }
 
-            return null;
+            return _instances[serviceType];
         }
+
+        return null;
     }
 }

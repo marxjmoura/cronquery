@@ -22,75 +22,73 @@
  * SOFTWARE.
  */
 
-using System;
+namespace CronQuery.Tests.Unit.Cron;
+
 using CronQuery.Cron;
 using Xunit;
 
-namespace CronQuery.Tests.Unit.Cron
+public sealed class InvalidExpressionTest
 {
-    public sealed class InvalidExpressionTest
+    [Fact]
+    public void ShouldNotEvaluateLowerThan6Fields()
     {
-        [Fact]
-        public void ShouldNotEvaluateLowerThan6Fields()
-        {
-            var expression = new CronExpression("* * * * *");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
+        var expression = new CronExpression("* * * * *");
+        var current = DateTime.UtcNow;
+        var expected = DateTime.MinValue;
 
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.False(expression.IsValid);
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldNotEvaluateMoreThan6Fields()
-        {
-            var expression = new CronExpression("* * * * * * *");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
+    [Fact]
+    public void ShouldNotEvaluateMoreThan6Fields()
+    {
+        var expression = new CronExpression("* * * * * * *");
+        var current = DateTime.UtcNow;
+        var expected = DateTime.MinValue;
 
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.False(expression.IsValid);
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldNotEvaluateInvalidExpression()
-        {
-            var expression = new CronExpression("IN V A L I D");
-            var current = DateTime.UtcNow;
-            var expected = DateTime.MinValue;
+    [Fact]
+    public void ShouldNotEvaluateInvalidExpression()
+    {
+        var expression = new CronExpression("IN V A L I D");
+        var current = DateTime.UtcNow;
+        var expected = DateTime.MinValue;
 
-            Assert.False(expression.IsValid);
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.False(expression.IsValid);
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldIgnoreSecondOutOfRange()
-        {
-            var expression = new CronExpression("99 * * * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = new DateTime(2019, 01, 01, 00, 00, 59);
+    [Fact]
+    public void ShouldIgnoreSecondOutOfRange()
+    {
+        var expression = new CronExpression("99 * * * * *");
+        var current = new DateTime(2019, 01, 01, 00, 00, 00);
+        var expected = new DateTime(2019, 01, 01, 00, 00, 59);
 
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldIgnoreIncrementByZero()
-        {
-            var expression = new CronExpression("*/0 * * * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = new DateTime(2019, 01, 01, 00, 00, 01);
+    [Fact]
+    public void ShouldIgnoreIncrementByZero()
+    {
+        var expression = new CronExpression("*/0 * * * * *");
+        var current = new DateTime(2019, 01, 01, 00, 00, 00);
+        var expected = new DateTime(2019, 01, 01, 00, 00, 01);
 
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldIgnoreCharacterNotAllowed()
-        {
-            var expression = new CronExpression("* * 10#5 * * *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+    [Fact]
+    public void ShouldIgnoreCharacterNotAllowed()
+    {
+        var expression = new CronExpression("* * 10#5 * * *");
+        var current = new DateTime(2019, 01, 01, 00, 00, 00);
+        var expected = DateTime.MinValue;
 
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.Equal(expected, expression.Next(current));
     }
 }

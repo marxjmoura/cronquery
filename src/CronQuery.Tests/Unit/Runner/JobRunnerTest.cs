@@ -22,217 +22,213 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
-using CronQuery.API.Mvc.Jobs;
+namespace CronQuery.Tests.Unit.Runner;
+
 using CronQuery.Mvc.Jobs;
-using Microsoft.Extensions.DependencyInjection;
 using CronQuery.Tests.Fakes;
 using CronQuery.Tests.Fakes.Jobs;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace CronQuery.Tests.Unit.Runner
+public sealed class JobRunnerTest
 {
-    public sealed class JobRunnerTest
+    private readonly LoggerFactoryFake _loggerFactory;
+    private readonly ServiceCollection _serviceCollection;
+    private readonly JobCollection _jobCollection;
+
+    public JobRunnerTest()
     {
-        private readonly LoggerFactoryFake _loggerFactory;
-        private readonly ServiceCollection _serviceCollection;
-        private readonly JobCollection _jobCollection;
+        _loggerFactory = new LoggerFactoryFake();
+        _serviceCollection = new ServiceCollection();
+        _jobCollection = new JobCollection(_serviceCollection);
+    }
 
-        public JobRunnerTest()
+    [Fact]
+    public void ShouldRunJobSuccessfully()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.True(serviceProvider.GetService<JobSuccessful>()!.Executed);
+    }
+
+    [Fact]
+    public void ShouldNotRunStoppedJob()
+    {
+        var options = new OptionsMonitorFake(JobStopped.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobStopped>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.False(serviceProvider.GetService<JobStopped>()!.Executed);
+    }
+
+    [Fact]
+    public void ShouldLogErrorForJobNotEnqueued()
+    {
+        var options = new OptionsMonitorFake(JobNotEnqueued.Options);
+        var serviceProvider = _serviceCollection.BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.Contains(_loggerFactory.Logger.Messages, message =>
+            message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
+    }
+
+    [Fact]
+    public void ShouldLogJobFail()
+    {
+        var options = new OptionsMonitorFake(JobWithError.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobWithError>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.Contains(_loggerFactory.Logger.Messages, message =>
+            message == $"Job '{nameof(JobWithError)}' failed during running.");
+    }
+
+    [Fact]
+    public void ShouldLogWhenCronIsInvalid()
+    {
+        var options = new OptionsMonitorFake(JobBadlyConfigured.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobBadlyConfigured>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.Contains(_loggerFactory.Logger.Messages, message =>
+            message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
+    }
+
+    [Fact]
+    public void ShouldNotRunJobsWhenRunnerIsOff()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        options.Change(options => options.Running = false);
+
+        var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.False(serviceProvider.GetService<JobSuccessful>()!.Executed);
+    }
+
+    [Fact]
+    public void ShouldAssumeNewConfigurationImmediately()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+
+        jobRunner.Start();
+
+        options.Change(options => options.Running = false);
+
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+
+        Assert.False(serviceProvider.GetService<JobSuccessful>()!.Executed);
+    }
+
+    [Fact]
+    public void ShouldNotInstanceWithNullOptions()
+    {
+        var serviceProvider = _serviceCollection.BuildServiceProvider();
+
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            _loggerFactory = new LoggerFactoryFake();
-            _serviceCollection = new ServiceCollection();
-            _jobCollection = new JobCollection(_serviceCollection);
-        }
+            new JobRunner(null!, _jobCollection, serviceProvider, _loggerFactory);
+        });
+    }
 
-        [Fact]
-        public void ShouldRunJobSuccessfully()
+    [Fact]
+    public void ShouldNotInstanceWithNullJobCollection()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = _serviceCollection.BuildServiceProvider();
+
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+            new JobRunner(options, null!, serviceProvider, _loggerFactory);
+        });
+    }
 
-            jobRunner.Start();
+    [Fact]
+    public void ShouldNotInstanceWithNullServiceProvider()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
-
-            Assert.True(serviceProvider.GetService<JobSuccessful>().Executed);
-        }
-
-        [Fact]
-        public void ShouldNotRunStoppedJob()
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            var options = new OptionsMonitorFake(JobStopped.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobStopped>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+            new JobRunner(options, _jobCollection, null!, _loggerFactory);
+        });
+    }
 
-            jobRunner.Start();
+    [Fact]
+    public void ShouldNotInstanceWithNullLoggerFactory()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = new ServiceProviderFake();
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
-
-            Assert.False(serviceProvider.GetService<JobStopped>().Executed);
-        }
-
-        [Fact]
-        public void ShouldLogErrorForJobNotEnqueued()
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            var options = new OptionsMonitorFake(JobNotEnqueued.Options);
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+            new JobRunner(options, _jobCollection, serviceProvider, null!);
+        });
+    }
 
-            jobRunner.Start();
+    [Fact]
+    public async Task ShouldRunJobManually()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+        await jobRunner.RunAsync(nameof(JobSuccessful));
 
-            Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
-        }
+        Assert.True(serviceProvider.GetService<JobSuccessful>()!.Executed);
+    }
 
-        [Fact]
-        public void ShouldLogJobFail()
-        {
-            var options = new OptionsMonitorFake(JobWithError.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobWithError>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+    [Fact]
+    public async Task ShouldLogErrorWhenRunManuallyJobNotEnqueued()
+    {
+        var options = new OptionsMonitorFake(JobSuccessful.Options);
+        var serviceProvider = _serviceCollection.BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
 
-            jobRunner.Start();
+        await jobRunner.RunAsync(nameof(JobNotEnqueued));
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+        Assert.Contains(_loggerFactory.Logger.Messages, message =>
+            message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
+    }
 
-            Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job '{nameof(JobWithError)}' failed during running.");
-        }
+    [Fact]
+    public async Task ShouldLogJobFailAfterRunManually()
+    {
+        var options = new OptionsMonitorFake(JobWithError.Options);
+        var serviceProvider = _serviceCollection.AddSingleton<JobWithError>().BuildServiceProvider();
+        var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
 
-        [Fact]
-        public void ShouldLogWhenCronIsInvalid()
-        {
-            var options = new OptionsMonitorFake(JobBadlyConfigured.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobBadlyConfigured>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
+        await jobRunner.RunAsync(nameof(JobWithError));
 
-            jobRunner.Start();
-
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
-
-            Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
-        }
-
-        [Fact]
-        public void ShouldNotRunJobsWhenRunnerIsOff()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            options.Change(options => options.Running = false);
-
-            var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
-
-            jobRunner.Start();
-
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
-
-            Assert.False(serviceProvider.GetService<JobSuccessful>().Executed);
-        }
-
-        [Fact]
-        public void ShouldAssumeNewConfigurationImmediately()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
-
-            jobRunner.Start();
-
-            options.Change(options => options.Running = false);
-
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
-
-            Assert.False(serviceProvider.GetService<JobSuccessful>().Executed);
-        }
-
-        [Fact]
-        public void ShouldNotInstanceWithNullOptions()
-        {
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                new JobRunner(null, _jobCollection, serviceProvider, _loggerFactory);
-            });
-        }
-
-        [Fact]
-        public void ShouldNotInstanceWithNullJobCollection()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                new JobRunner(options, null, serviceProvider, _loggerFactory);
-            });
-        }
-
-        [Fact]
-        public void ShouldNotInstanceWithNullServiceProvider()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                new JobRunner(options, _jobCollection, null, _loggerFactory);
-            });
-        }
-
-        [Fact]
-        public void ShouldNotInstanceWithNullLoggerFactory()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = new ServiceProviderFake();
-
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                new JobRunner(options, _jobCollection, serviceProvider, null);
-            });
-        }
-
-        [Fact]
-        public async Task ShouldRunJobManually()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobSuccessful>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
-
-            await jobRunner.RunAsync(nameof(JobSuccessful));
-
-            Assert.True(serviceProvider.GetService<JobSuccessful>().Executed);
-        }
-
-        [Fact]
-        public async Task ShouldLogErrorWhenRunManuallyJobNotEnqueued()
-        {
-            var options = new OptionsMonitorFake(JobSuccessful.Options);
-            var serviceProvider = _serviceCollection.BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
-
-            await jobRunner.RunAsync(nameof(JobNotEnqueued));
-
-            Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
-        }
-
-        [Fact]
-        public async Task ShouldLogJobFailAfterRunManually()
-        {
-            var options = new OptionsMonitorFake(JobWithError.Options);
-            var serviceProvider = _serviceCollection.AddSingleton<JobWithError>().BuildServiceProvider();
-            var jobRunner = new JobRunner(options, _jobCollection, serviceProvider, _loggerFactory);
-
-            await jobRunner.RunAsync(nameof(JobWithError));
-
-            Assert.Contains(_loggerFactory.Logger.Messages, message =>
-                message == $"Job '{nameof(JobWithError)}' failed during running.");
-        }
+        Assert.Contains(_loggerFactory.Logger.Messages, message =>
+            message == $"Job '{nameof(JobWithError)}' failed during running.");
     }
 }

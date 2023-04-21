@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+namespace CronQuery.Mvc.Options;
 
-namespace CronQuery.Mvc.Options
+public sealed class JobRunnerOptions
 {
-    public sealed class JobRunnerOptions
-    {
-        public bool Running { get; set; }
-        public string TimeZone { get; set; }
-        public ICollection<JobOptions> Jobs { get; } = new List<JobOptions>();
-    }
+    public bool Running { get; set; }
+
+    public string TimeZone { get; set; } = null!;
+
+    public ICollection<JobOptions> Jobs { get; } = new List<JobOptions>();
 }

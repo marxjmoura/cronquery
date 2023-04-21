@@ -22,38 +22,36 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+namespace CronQuery.Tests.Fakes.Jobs;
+
 using CronQuery.Mvc.Jobs;
 using CronQuery.Mvc.Options;
 
-namespace CronQuery.Tests.Fakes.Jobs
+public sealed class JobStopped : IJob
 {
-    public sealed class JobStopped : IJob
+    public bool Executed { get; private set; }
+
+    public Task RunAsync()
     {
-        public bool Executed { get; private set; }
+        Executed = true;
 
-        public Task RunAsync()
+        return Task.CompletedTask;
+    }
+
+    public static JobRunnerOptions Options
+    {
+        get
         {
-            Executed = true;
-
-            return Task.CompletedTask;
-        }
-
-        public static JobRunnerOptions Options
-        {
-            get
+            var options = new JobRunnerOptions();
+            options.Running = true;
+            options.Jobs.Add(new JobOptions
             {
-                var options = new JobRunnerOptions();
-                options.Running = true;
-                options.Jobs.Add(new JobOptions
-                {
-                    Running = false,
-                    Name = nameof(JobStopped),
-                    Cron = "* * * * * *"
-                });
+                Running = false,
+                Name = nameof(JobStopped),
+                Cron = "* * * * * *"
+            });
 
-                return options;
-            }
+            return options;
         }
     }
 }

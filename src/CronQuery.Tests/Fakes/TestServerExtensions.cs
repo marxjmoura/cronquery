@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
+namespace CronQuery.Tests.Fakes;
+
 using CronQuery.Mvc.Jobs;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace CronQuery.Tests.Fakes
+public static class TestServerExtensions
 {
-    public static class TestServerExtensions
-    {
-        public static LoggerFake Logger(this TestServer server) =>
-            server.Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger(string.Empty) as LoggerFake;
+    public static LoggerFake Logger(this TestServer server) =>
+        (LoggerFake)server.Host.Services.GetRequiredService<ILoggerFactory>().CreateLogger(string.Empty);
 
-        public static TJob Job<TJob>(this TestServer server) where TJob : IJob =>
-            server.Host.Services.GetRequiredService<TJob>();
-    }
+    public static TJob Job<TJob>(this TestServer server) where TJob : IJob =>
+        server.Host.Services.GetRequiredService<TJob>();
 }

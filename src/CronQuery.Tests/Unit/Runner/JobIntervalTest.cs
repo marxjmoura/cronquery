@@ -22,80 +22,77 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
+namespace CronQuery.Tests.Unit.Runner;
+
 using CronQuery.Cron;
 using CronQuery.Mvc.Jobs;
 using Xunit;
 
-namespace CronQuery.Tests.Unit.Runner
+public sealed class JobIntervalTest
 {
-    public sealed class JobIntervalTest
+    [Fact]
+    public void ShouldRunWork()
     {
-        [Fact]
-        public void ShouldRunWork()
-        {
-            var fires = 0;
-            var cron = new CronExpression("* * * * * *");
-            var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
+        var fires = 0;
+        var cron = new CronExpression("* * * * * *");
+        var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
 
-            interval.Run();
+        interval.Run();
 
-            Task.Delay(2500).GetAwaiter().GetResult(); // Waiting for the job
+        Task.Delay(2500).GetAwaiter().GetResult(); // Waiting for the job
 
-            Assert.Equal(2, fires);
-        }
+        Assert.Equal(2, fires);
+    }
 
-        [Fact]
-        public void ShouldNotRunWorkAfterDispose()
-        {
-            var fires = 0;
-            var cron = new CronExpression("* * * * * *");
-            var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
+    [Fact]
+    public void ShouldNotRunWorkAfterDispose()
+    {
+        var fires = 0;
+        var cron = new CronExpression("* * * * * *");
+        var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
 
-            interval.Run();
+        interval.Run();
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
-            interval.Dispose();
+        interval.Dispose();
 
-            Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
+        Task.Delay(1500).GetAwaiter().GetResult(); // Waiting for the job
 
-            Assert.Equal(1, fires);
-        }
+        Assert.Equal(1, fires);
+    }
 
-        [Fact]
-        public void ShouldNotRunWorkForUnreachableCondition()
-        {
-            var fires = 0;
-            var cron = new CronExpression("* * * 30 2 *");
-            var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
+    [Fact]
+    public void ShouldNotRunWorkForUnreachableCondition()
+    {
+        var fires = 0;
+        var cron = new CronExpression("* * * 30 2 *");
+        var interval = new JobInterval(cron, TimeZoneInfo.Utc, () => Task.FromResult(++fires));
 
-            interval.Run();
+        interval.Run();
 
-            Assert.Equal(0, fires);
-        }
+        Assert.Equal(0, fires);
+    }
 
-        [Fact]
-        public void ShouldNotInstanceWithNullCron()
-        {
-            Assert.Throws<ArgumentNullException>(() => new JobInterval(null, TimeZoneInfo.Utc, () => Task.CompletedTask));
-        }
+    [Fact]
+    public void ShouldNotInstanceWithNullCron()
+    {
+        Assert.Throws<ArgumentNullException>(() => new JobInterval(null!, TimeZoneInfo.Utc, () => Task.CompletedTask));
+    }
 
-        [Fact]
-        public void ShouldNotInstanceWithNullNullTimezone()
-        {
-            var cron = new CronExpression("* * * 30 2 *");
+    [Fact]
+    public void ShouldNotInstanceWithNullNullTimezone()
+    {
+        var cron = new CronExpression("* * * 30 2 *");
 
-            Assert.Throws<ArgumentNullException>(() => new JobInterval(cron, null, () => Task.CompletedTask));
-        }
+        Assert.Throws<ArgumentNullException>(() => new JobInterval(cron, null!, () => Task.CompletedTask));
+    }
 
-        [Fact]
-        public void ShouldNotInstanceWithNullWork()
-        {
-            var cron = new CronExpression("* * * 30 2 *");
+    [Fact]
+    public void ShouldNotInstanceWithNullWork()
+    {
+        var cron = new CronExpression("* * * 30 2 *");
 
-            Assert.Throws<ArgumentNullException>(() => new JobInterval(cron, TimeZoneInfo.Utc, null));
-        }
+        Assert.Throws<ArgumentNullException>(() => new JobInterval(cron, TimeZoneInfo.Utc, null!));
     }
 }

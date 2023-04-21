@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-namespace CronQuery.Mvc.Options
+namespace CronQuery.Mvc.Options;
+
+public sealed class JobOptions
 {
-    public sealed class JobOptions
-    {
-        public bool Running { get; set; }
-        public string Name { get; set; }
-        public string Cron { get; set; }
-    }
+    public bool Running { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public string Cron { get; set; } = null!;
 }

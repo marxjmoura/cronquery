@@ -22,34 +22,32 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+namespace CronQuery.Tests.Fakes.Jobs;
+
 using CronQuery.Mvc.Jobs;
 using CronQuery.Mvc.Options;
 
-namespace CronQuery.Tests.Fakes.Jobs
+public sealed class JobNotEnqueued : IJob
 {
-    public sealed class JobNotEnqueued : IJob
+    public Task RunAsync()
     {
-        public Task RunAsync()
-        {
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
+    }
 
-        public static JobRunnerOptions Options
+    public static JobRunnerOptions Options
+    {
+        get
         {
-            get
+            var options = new JobRunnerOptions();
+            options.Running = true;
+            options.Jobs.Add(new JobOptions
             {
-                var options = new JobRunnerOptions();
-                options.Running = true;
-                options.Jobs.Add(new JobOptions
-                {
-                    Running = true,
-                    Name = nameof(JobNotEnqueued),
-                    Cron = "* * * * * *"
-                });
+                Running = true,
+                Name = nameof(JobNotEnqueued),
+                Cron = "* * * * * *"
+            });
 
-                return options;
-            }
+            return options;
         }
     }
 }
