@@ -1,0 +1,160 @@
+{{#> www/page }}
+
+{{#*inline "body-block"}}
+
+<h1 class="text-center">
+  {{!-- <img src="{{baseUrl}}/img/logo.svg"> --}}
+</h1>
+
+<h1 class="text-center">
+  CronQuery
+</h1>
+
+<p class="text-center">
+  <b>CronQuery</b> is an <a href="https://github.com/marxjmoura/cronquery">open source</a>
+  and lightweight job runner for ASP.NET Core.
+</p>
+
+<h2 id="installation" class="text-center">
+  Installation
+</h2>
+
+<p class="text-center">
+  CronQuery is installed via <a href="https://www.nuget.org/packages/CronQuery">NuGet</a> package.
+</p>
+
+<ul class="nav nav-pills justify-content-center">
+  <li class="nav-item">
+    <button  type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#netCliTab">
+      .NET CLI
+    </button>
+  </li>
+  <li class="nav-item">
+    <button  type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#packageManagerTab">
+      Package Manager (Visual Studio)
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div id="netCliTab" class="tab-pane show active" tabindex="0">
+    <pre><code>dotnet add package CronQuery</code></pre>
+  </div>
+  <div id="packageManagerTab" class="tab-pane" tabindex="0">
+    <pre><code>Install-Package CronQuery</code></pre>
+  </div>
+</div>
+
+<h2 id="creating-job" class="text-center">
+  Creating a job
+</h2>
+
+<p class="text-center">
+  Jobs are created by implementing the interface <code>IJob</code>.
+</p>
+
+<pre><code>{{ include 'www/snippets/CreatingJob.cs' }}</code></pre>
+
+<h2 id="registering-job" class="text-center">
+  Registering a job
+</h2>
+
+<p class="text-center">
+  Jobs are registered in the <code>Program.cs</code> class.
+</p>
+
+<pre><code>{{ include 'www/snippets/RegisteringJob.cs' }}</code></pre>
+
+<div class="callout">
+  Jobs are registered using the ASP.NET Core dependency injection.
+  This means that is possible to use dependency injection in your jobs.
+</div>
+
+<h2 id="setting-up-job" class="text-center">
+  Setting up a job
+</h2>
+
+<p>
+  Schedule your jobs using <a href="{{baseUrl}}/cron.html">cron expressions</a> of six fields to a
+  specific timezone (UTC is default). Save the configuration in your appsettings.json like the example below:
+</p>
+
+<ul>
+  <li>
+    <code>MyFirstJob</code>
+    <i>Runs every second on every day, except Sunday.</i>
+  </li>
+  <li>
+    <code>MySecondJob</code>
+    <i>Runs every day at 2:00 A.M.</i>
+  </li>
+  <li>
+    <code>MyThirdJob</code>
+    <i>Runs every second between 2:00 P.M. and 6:59 P.M. only on Saturday every 15 days.</i>
+  </li>
+</ul>
+
+<pre><code>{{ include 'www/snippets/SettingUpJob.json' }}</code></pre>
+
+<p>
+  Whenever you save the appsettings.json CronQuery immediately assumes the new configuration.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>CronQuery.Running</code>
+      </td>
+      <td>
+        Turn on (<code>true</code>) or turn off (<code>false</code>) the CronQuery runner.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>CronQuery.TimeZone</code>
+      </td>
+      <td>
+        System time zone ID or a custom UTC offset, e.g. <code>UTC-03:00</code>, <code>UTC+01:00</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>CronQuery.Jobs[].Name</code>
+      </td>
+      <td>
+        Job class name.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>CronQuery.Jobs[].Running</code>
+      </td>
+      <td>
+        Turn on (<code>true</code>) or turn off (<code>false</code>) the job.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>CronQuery.Jobs[].Cron</code>
+      </td>
+      <td>
+        Cron expression that triggers the job.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="text-center">
+  Your jobs are ready to run. Enjoy! :)
+</p>
+
+{{/inline}}
+
+{{/www/page}}

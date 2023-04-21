@@ -1,0 +1,9 @@
+table {
+  @extend .table;
+
+  border-bottom: $border-color $border-width solid;
+
+  thead th {
+    border-top: none;
+  }
+}
