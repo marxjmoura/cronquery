@@ -14,10 +14,10 @@ dotnet test \
   /p:AltCoverForce="true" \
   /p:AltCoverThreshold="80" \
   /p:AltCoverOpenCover="true" \
-  /p:AltCoverXmlReport="coverage/opencover.xml" \
+  /p:AltCoverReport="coverage/opencover.xml" \
   /p:AltCoverInputDirectory="$api_project_dir" \
   /p:AltCoverAttributeFilter="ExcludeFromCodeCoverage" \
-  /p:AltCoverAssemblyExcludeFilter="System(.*)|xunit|$test_project_dir|$api_project_dir.Views"
+  /p:AltCoverAssemblyExcludeFilter="^(?!(CronQuery)).*$|CronQuery.Tests"
 
 dotnet reportgenerator \
   "-reports:coverage/opencover.xml" \
