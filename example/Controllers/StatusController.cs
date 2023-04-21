@@ -22,16 +22,15 @@
  * SOFTWARE.
  */
 
+namespace Example.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 
-namespace example.Controllers
+public class StatusController : Controller
 {
-    public class StatusController : Controller
+    [HttpGet, Route("/")]
+    public IActionResult Index()
     {
-        [HttpGet, Route("/")]
-        public IActionResult Index()
-        {
-            return Content("Jobs are running...");
-        }
+        return Content("Jobs are running...");
     }
 }

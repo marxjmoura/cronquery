@@ -22,49 +22,48 @@
  * SOFTWARE.
  */
 
-using System;
+namespace CronQuery.Tests.Fakes;
+
 using CronQuery.Mvc.Options;
 using Microsoft.Extensions.Options;
 
-namespace CronQuery.Tests.Fakes
+public sealed class OptionsMonitorFake : IOptionsMonitor<JobRunnerOptions>, IDisposable
 {
-    public sealed class OptionsMonitorFake : IOptionsMonitor<JobRunnerOptions>, IDisposable
+    private readonly JobRunnerOptions _options;
+
+    private Action<JobRunnerOptions, string> _listener = null!;
+
+    public OptionsMonitorFake(JobRunnerOptions options)
     {
-        private JobRunnerOptions _options;
-        private Action<JobRunnerOptions, string> _listener;
+        _options = options;
+    }
 
-        public OptionsMonitorFake(JobRunnerOptions options)
+    public JobRunnerOptions CurrentValue => _options;
+
+    public void Change(Action<JobRunnerOptions> change)
+    {
+        change(_options);
+
+        if (_listener != null)
         {
-            _options = options;
+            _listener(_options, string.Empty);
         }
+    }
 
-        public JobRunnerOptions CurrentValue => _options;
+    public void Dispose()
+    {
+        _listener = null!;
+    }
 
-        public void Change(Action<JobRunnerOptions> change)
-        {
-            change(_options);
+    public JobRunnerOptions Get(string name)
+    {
+        return _options;
+    }
 
-            if (_listener != null)
-            {
-                _listener(_options, string.Empty);
-            }
-        }
+    public IDisposable OnChange(Action<JobRunnerOptions, string> listener)
+    {
+        _listener = listener;
 
-        public void Dispose()
-        {
-            _listener = null;
-        }
-
-        public JobRunnerOptions Get(string name)
-        {
-            return _options;
-        }
-
-        public IDisposable OnChange(Action<JobRunnerOptions, string> listener)
-        {
-            _listener = listener;
-
-            return this;
-        }
+        return this;
     }
 }

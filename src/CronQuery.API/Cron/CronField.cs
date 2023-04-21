@@ -22,149 +22,145 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace CronQuery.Cron;
+
 using CronQuery.Extensions;
 
-namespace CronQuery.Cron
+internal sealed class CronField
 {
-    internal sealed class CronField
+    private readonly TimeUnit _timeUnit;
+
+    public CronField(string expression, TimeUnit timeUnit)
     {
-        private readonly TimeUnit _timeUnit;
+        _timeUnit = timeUnit;
 
-        public CronField(string expression, TimeUnit timeUnit)
+        Values = expression.Split(',')
+            .Select(value => new CronValue(value, timeUnit))
+            .ToList();
+    }
+
+    public IEnumerable<CronValue> Values { get; }
+
+    public bool Matches(DateTime dateTime)
+    {
+        if (Values.Any(value => value.HasW))
         {
-            _timeUnit = timeUnit;
-
-            Values = expression.Split(',')
-                .Select(value => new CronValue(value, timeUnit))
-                .ToList();
+            return dateTime == NearestWeekday(dateTime);
         }
 
-        public IEnumerable<CronValue> Values { get; }
-
-        public bool Matches(DateTime dateTime)
+        if (Values.Any(value => value.HasL))
         {
-            if (Values.Any(value => value.HasW))
-            {
-                return dateTime == NearestWeekday(dateTime);
-            }
-
-            if (Values.Any(value => value.HasL))
-            {
-                return dateTime == LastDayInMonth(dateTime);
-            }
-
-            if (Values.Any(value => value.HasHash))
-            {
-                return dateTime == DayOfWeekOccurence(dateTime);
-            }
-
-            return Values.SelectMany(cron => cron.Values).Contains(dateTime.Get(_timeUnit));
+            return dateTime == LastDayInMonth(dateTime);
         }
 
-        public DateTime Next(DateTime dateTime)
+        if (Values.Any(value => value.HasHash))
         {
-            if (Values.Any(value => value.HasW))
-            {
-                return NearestWeekday(dateTime);
-            }
-
-            if (Values.Any(value => value.HasL))
-            {
-                return LastDayInMonth(dateTime);
-            }
-
-            if (Values.Any(value => value.HasHash))
-            {
-                return DayOfWeekOccurence(dateTime);
-            }
-
-            return ListValue(dateTime);
+            return dateTime == DayOfWeekOccurence(dateTime);
         }
 
-        public DateTime Reset(DateTime dateTime)
+        return Values.SelectMany(cron => cron.Values).Contains(dateTime.Get(_timeUnit));
+    }
+
+    public DateTime Next(DateTime dateTime)
+    {
+        if (Values.Any(value => value.HasW))
         {
-            var values = Values.SelectMany(cron => cron.Values);
-
-            if (!values.Any())
-            {
-                return dateTime;
-            }
-
-            return dateTime.Set(_timeUnit, values.Min());
+            return NearestWeekday(dateTime);
         }
 
-        private DateTime ListValue(DateTime dateTime)
+        if (Values.Any(value => value.HasL))
         {
-            var values = Values.SelectMany(cron => cron.Values);
-
-            var next = values
-                .Where(value => value > dateTime.Get(_timeUnit))
-                .Select(value => (int?)value)
-                .FirstOrDefault();
-
-            next = next ?? values.Min();
-
-            if (_timeUnit.IsDay && next.Value > DateTime.DaysInMonth(dateTime.Year, dateTime.Month))
-            {
-                dateTime = dateTime.AddMonths(1);
-                next = values.Min();
-            }
-
-            if (_timeUnit.IsMonth)
-            {
-                var daysInMonth = DateTime.DaysInMonth(dateTime.Year, next.Value);
-
-                if (dateTime.Day > daysInMonth)
-                {
-                    dateTime = dateTime.Set(day: daysInMonth);
-                }
-            }
-
-            return dateTime.Set(_timeUnit, next.Value);
+            return LastDayInMonth(dateTime);
         }
 
-        private DateTime LastDayInMonth(DateTime dateTime)
+        if (Values.Any(value => value.HasHash))
         {
-            var cron = Values.Single();
+            return DayOfWeekOccurence(dateTime);
+        }
 
-            if (_timeUnit.IsDay)
+        return ListValue(dateTime);
+    }
+
+    public DateTime Reset(DateTime dateTime)
+    {
+        var values = Values.SelectMany(cron => cron.Values);
+
+        if (!values.Any())
+        {
+            return dateTime;
+        }
+
+        return dateTime.Set(_timeUnit, values.Min());
+    }
+
+    private DateTime ListValue(DateTime dateTime)
+    {
+        var values = Values.SelectMany(cron => cron.Values);
+
+        var next = values
+            .Where(value => value > dateTime.Get(_timeUnit))
+            .Select(value => (int?)value)
+            .FirstOrDefault();
+
+        next = next ?? values.Min();
+
+        if (_timeUnit.IsDay && next.Value > DateTime.DaysInMonth(dateTime.Year, dateTime.Month))
+        {
+            dateTime = dateTime.AddMonths(1);
+            next = values.Min();
+        }
+
+        if (_timeUnit.IsMonth)
+        {
+            var daysInMonth = DateTime.DaysInMonth(dateTime.Year, next.Value);
+
+            if (dateTime.Day > daysInMonth)
             {
-                if (cron.IsL) // Expression is L
-                {
-                    return dateTime.Last();
-                }
+                dateTime = dateTime.Set(day: daysInMonth);
+            }
+        }
 
-                return dateTime.Last(daysBefore: cron.Values.Single()); // Expression is L-[1-31]
+        return dateTime.Set(_timeUnit, next.Value);
+    }
+
+    private DateTime LastDayInMonth(DateTime dateTime)
+    {
+        var cron = Values.Single();
+
+        if (_timeUnit.IsDay)
+        {
+            if (cron.IsL) // Expression is L
+            {
+                return dateTime.Last();
             }
 
-            return dateTime.Last().Previous((DayOfWeek)cron.Values.Single()); // Expression is L or [0-6]L
+            return dateTime.Last(daysBefore: cron.Values.Single()); // Expression is L-[1-31]
         }
 
-        private DateTime NearestWeekday(DateTime dateTime)
+        return dateTime.Last().Previous((DayOfWeek)cron.Values.Single()); // Expression is L or [0-6]L
+    }
+
+    private DateTime NearestWeekday(DateTime dateTime)
+    {
+        var cron = Values.Single();
+
+        var day = cron.HasL ?
+            DateTime.DaysInMonth(dateTime.Year, dateTime.Month) : // Expression is LW
+            cron.Values.Single(); // Expression is [1-31]W
+
+        if (day > DateTime.DaysInMonth(dateTime.Year, dateTime.Month))
         {
-            var cron = Values.Single();
-
-            var day = cron.HasL ?
-                DateTime.DaysInMonth(dateTime.Year, dateTime.Month) : // Expression is LW
-                cron.Values.Single(); // Expression is [1-31]W
-
-            if (day > DateTime.DaysInMonth(dateTime.Year, dateTime.Month))
-            {
-                dateTime = dateTime.AddMonths(1);
-            }
-
-            return dateTime.Set(day: day).NearestWeekday();
+            dateTime = dateTime.AddMonths(1);
         }
 
-        private DateTime DayOfWeekOccurence(DateTime dateTime)
-        {
-            var cron = Values.Single();
-            var dayOfWeek = (DayOfWeek)cron.Values.Single();
+        return dateTime.Set(day: day).NearestWeekday();
+    }
 
-            return dateTime.Next(dayOfWeek, cron.Nth);
-        }
+    private DateTime DayOfWeekOccurence(DateTime dateTime)
+    {
+        var cron = Values.Single();
+        var dayOfWeek = (DayOfWeek)cron.Values.Single();
+
+        return dateTime.Next(dayOfWeek, cron.Nth);
     }
 }

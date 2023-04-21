@@ -22,32 +22,30 @@
  * SOFTWARE.
  */
 
-using System;
+namespace CronQuery.Tests.Unit.Cron;
+
 using CronQuery.Cron;
 using Xunit;
 
-namespace CronQuery.Tests.Unit.Cron
+public sealed class UnreachableConditionTest
 {
-    public sealed class UnreachableConditionTest
+    [Fact]
+    public void ShouldNotEvaluateNearestWeekdayOnlyOnSunday()
     {
-        [Fact]
-        public void ShouldNotEvaluateNearestWeekdayOnlyOnSunday()
-        {
-            var expression = new CronExpression("0 0 8 15W * 0");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+        var expression = new CronExpression("0 0 8 15W * 0");
+        var current = new DateTime(2019, 01, 01, 00, 00, 00);
+        var expected = DateTime.MinValue;
 
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.Equal(expected, expression.Next(current));
+    }
 
-        [Fact]
-        public void ShouldNotEvaluateOnlyMonthsThatNotReachTheGivenDay()
-        {
-            var expression = new CronExpression("0 0 8 31 2,4,6 *");
-            var current = new DateTime(2019, 01, 01, 00, 00, 00);
-            var expected = DateTime.MinValue;
+    [Fact]
+    public void ShouldNotEvaluateOnlyMonthsThatNotReachTheGivenDay()
+    {
+        var expression = new CronExpression("0 0 8 31 2,4,6 *");
+        var current = new DateTime(2019, 01, 01, 00, 00, 00);
+        var expected = DateTime.MinValue;
 
-            Assert.Equal(expected, expression.Next(current));
-        }
+        Assert.Equal(expected, expression.Next(current));
     }
 }

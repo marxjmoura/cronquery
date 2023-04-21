@@ -22,26 +22,23 @@
  * SOFTWARE.
  */
 
+namespace CronQuery.Tests.Functional;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.IO;
 
-namespace CronQuery.Tests.Functional
+public sealed class Program
 {
-    public sealed class Program
-    {
-        public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
-            .UseStartup<Startup>()
-            .UseEnvironment("Testing")
-            .ConfigureAppConfiguration((builderContext, config) =>
-            {
-                var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
-                var root = AppContext.BaseDirectory.Replace(build, string.Empty);
-                var appsettings = Path.Combine(root, "Functional", "appsettings.json");
+    public static IWebHostBuilder CreateWebHostBuilder() => new WebHostBuilder()
+        .UseStartup<Startup>()
+        .UseEnvironment("Testing")
+        .ConfigureAppConfiguration((builderContext, config) =>
+        {
+            var build = Path.Combine("bin", "Debug", "netcoreapp2.2");
+            var root = AppContext.BaseDirectory.Replace(build, string.Empty);
+            var appsettings = Path.Combine(root, "Functional", "appsettings.json");
 
-                config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
-            });
-    }
+            config.AddJsonFile(appsettings, optional: false, reloadOnChange: true);
+        });
 }

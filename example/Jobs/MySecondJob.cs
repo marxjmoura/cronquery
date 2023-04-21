@@ -22,17 +22,16 @@
  * SOFTWARE.
  */
 
+namespace Example.Jobs;
+
 using System;
 using System.Threading.Tasks;
 using CronQuery.Mvc.Jobs;
 
-namespace example.Jobs
+public class MySecondJob : IJob
 {
-    public class MySecondJob : IJob
+    public Task RunAsync()
     {
-        public Task RunAsync()
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

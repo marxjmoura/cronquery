@@ -22,24 +22,21 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
+namespace CronQuery.Tests.Fakes;
+
 using Microsoft.Extensions.Logging;
 
-namespace CronQuery.Tests.Fakes
+public sealed class LoggerFake : ILogger
 {
-    public sealed class LoggerFake : ILogger
+    public ICollection<string> Messages { get; } = new List<string>();
+
+    public IDisposable BeginScope<TState>(TState state) => null!;
+
+    public bool IsEnabled(LogLevel logLevel) => true;
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
-        public ICollection<string> Messages { get; } = new List<string>();
-
-        public IDisposable BeginScope<TState>(TState state) => null;
-
-        public bool IsEnabled(LogLevel logLevel) => true;
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
-            Func<TState, Exception, string> formatter)
-        {
-            Messages.Add(formatter(state, exception));
-        }
+        Messages.Add(formatter(state, exception));
     }
 }

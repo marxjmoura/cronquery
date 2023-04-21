@@ -22,20 +22,23 @@
  * SOFTWARE.
  */
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using CronQuery.Mvc.DependencyInjection;
+using Example.Jobs;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace example
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-    }
-}
+builder.Services.AddControllers();
+
+builder.Services.AddCronQuery(builder.Configuration.GetSection("CronQuery"));
+
+builder.Services.AddTransient<MyFirstJob>();
+builder.Services.AddTransient<MySecondJob>();
+
+var api = builder.Build();
+
+api.UseRouting();
+api.UseEndpoints(endpoints => endpoints.MapControllers());
+
+api.Run();

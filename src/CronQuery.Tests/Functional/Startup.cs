@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+namespace CronQuery.Tests.Functional;
+
 using CronQuery.Mvc.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -31,31 +33,28 @@ using Microsoft.Extensions.Logging;
 using CronQuery.Tests.Fakes;
 using CronQuery.Tests.Fakes.Jobs;
 
-namespace CronQuery.Tests.Functional
+public sealed class Startup
 {
-    public sealed class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCronQuery(Configuration.GetSection("CronQuery"));
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddCronQuery(Configuration.GetSection("CronQuery"));
 
-            services.AddSingleton<ILoggerFactory, LoggerFactoryFake>();
+        services.AddSingleton<ILoggerFactory, LoggerFactoryFake>();
 
-            services.AddSingleton<JobSuccessful>();
-            services.AddSingleton<JobBadlyConfigured>();
-            services.AddSingleton<JobWithError>();
-            services.AddSingleton<JobStopped>();
-        }
+        services.AddSingleton<JobSuccessful>();
+        services.AddSingleton<JobBadlyConfigured>();
+        services.AddSingleton<JobWithError>();
+        services.AddSingleton<JobStopped>();
+    }
 
-        public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
-        {
-        }
+    public void Configure(IApplicationBuilder app, IHostApplicationLifetime appLifetime)
+    {
     }
 }

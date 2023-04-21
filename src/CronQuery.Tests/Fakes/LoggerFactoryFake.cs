@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
+namespace CronQuery.Tests.Fakes;
+
 using Microsoft.Extensions.Logging;
 
-namespace CronQuery.Tests.Fakes
+public sealed class LoggerFactoryFake : ILoggerFactory
 {
-    public sealed class LoggerFactoryFake : ILoggerFactory
+    public LoggerFake Logger { get; } = new LoggerFake();
+
+    public void AddProvider(ILoggerProvider provider) { }
+
+    public ILogger CreateLogger(string categoryName)
     {
-        public LoggerFake Logger { get; } = new LoggerFake();
-
-        public void AddProvider(ILoggerProvider provider) { }
-
-        public ILogger CreateLogger(string categoryName)
-        {
-            return Logger;
-        }
-
-        public void Dispose() { }
+        return Logger;
     }
+
+    public void Dispose() { }
 }

@@ -21,40 +21,37 @@
 * SOFTWARE.
 */
 
-using System;
+namespace CronQuery.Tests.Unit.Runner;
+
 using CronQuery.Mvc.Options;
 using Xunit;
-using Xunit.Abstractions;
 
-namespace CronQuery.Tests.Unit.Runner
+public sealed class TimeZoneTest
 {
-    public sealed class TimeZoneTest
+    private readonly DateTime _mockUtcTime;
+
+    public TimeZoneTest()
     {
-        private readonly DateTime _mockUtcTime;
+        _mockUtcTime = new DateTime(2000, 01, 01, 00, 00, 00, DateTimeKind.Utc);
+    }
 
-        public TimeZoneTest(ITestOutputHelper output)
-        {
-            _mockUtcTime = new DateTime(2000, 01, 01, 00, 00, 00, DateTimeKind.Utc);
-        }
+    [Theory]
+    [InlineData(null, "2000-01-01T00:00:00")]
+    [InlineData("", "2000-01-01T00:00:00")]
+    [InlineData(" ", "2000-01-01T00:00:00")]
+    [InlineData("UTC+00:00", "2000-01-01T00:00:00")]
+    [InlineData("UTC+01:00", "2000-01-01T01:00:00")]
+    [InlineData("UTC-03:00", "1999-12-31T21:00:00")]
+    [InlineData("UTC+01:30", "2000-01-01T01:30:00")]
+    [InlineData("Europe/Budapest", "2000-01-01T01:00:00")]
+    [InlineData("America/Sao_Paulo", "1999-12-31T22:00:00")]
+    public void ShouldConvertToLocalTime(string timeZone, string expected)
+    {
+        var timeZoneOptions = new TimeZoneOptions(timeZone);
+        var timeZoneInfo = timeZoneOptions.ToTimeZoneInfo();
+        var localDateTime = TimeZoneInfo.ConvertTime(_mockUtcTime, timeZoneInfo);
+        var iso8601Format = localDateTime.ToString("yyyy-MM-ddTHH:mm:ss");
 
-        [Theory]
-        [InlineData(null, "2000-01-01T00:00:00")]
-        [InlineData("", "2000-01-01T00:00:00")]
-        [InlineData(" ", "2000-01-01T00:00:00")]
-        [InlineData("UTC+00:00", "2000-01-01T00:00:00")]
-        [InlineData("UTC+01:00", "2000-01-01T01:00:00")]
-        [InlineData("UTC-03:00", "1999-12-31T21:00:00")]
-        [InlineData("UTC+01:30", "2000-01-01T01:30:00")]
-        [InlineData("Europe/Budapest", "2000-01-01T01:00:00")]
-        [InlineData("America/Sao_Paulo", "1999-12-31T22:00:00")]
-        public void ShouldConvertToLocalTime(string timeZone, string expected)
-        {
-            var timeZoneOptions = new TimeZoneOptions(timeZone);
-            var timeZoneInfo = timeZoneOptions.ToTimeZoneInfo();
-            var localDateTime = TimeZoneInfo.ConvertTime(_mockUtcTime, timeZoneInfo);
-            var iso8601Format = localDateTime.ToString("yyyy-MM-ddTHH:mm:ss");
-
-            Assert.Equal(expected, iso8601Format);
-        }
+        Assert.Equal(expected, iso8601Format);
     }
 }
