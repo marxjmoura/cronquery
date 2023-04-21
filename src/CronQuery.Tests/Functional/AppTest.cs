@@ -43,6 +43,8 @@ public sealed class AppTest
     {
         await Task.Delay(1500); // Waiting for the jobs
 
+        await _server.Host.StopAsync();
+
         Assert.True(_server.Job<JobSuccessful>().Executed);
         Assert.False(_server.Job<JobStopped>().Executed);
 
