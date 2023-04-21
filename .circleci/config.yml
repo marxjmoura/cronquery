@@ -11,6 +11,7 @@ jobs:
     steps:
       - checkout
       - run: ./tools/install-dotnet.sh 6.0.101
+      - run: dotnet tool install --local dotnet-reportgenerator-globaltool --version 5.1.19
       - run: ./tools/test.sh
       - run: curl -s https://codecov.io/bash > ./codecov
       - run: chmod +x ./codecov
