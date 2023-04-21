@@ -1,0 +1,48 @@
+.sidebar-toggle {
+  display: none;
+  margin: 0 1rem;
+
+  .icon-bar {
+    background: $body-color;
+    display: block;
+    width: 1.625rem;
+    height: .1875rem;
+    border-radius: .0625rem;
+    margin: .25rem 0 .25rem 0;
+    transition: all 0.2s;
+
+    &:nth-of-type(1) {
+      transform: rotate(0);
+      transform-origin: 10% 10%;
+    }
+
+    &:nth-of-type(2) {
+      opacity: 1;
+    }
+
+    &:nth-of-type(3) {
+      transform: rotate(0);
+      transform-origin: 10% 90%;
+    }
+  }
+}
+
+.sidebar-show .icon-bar {
+  &:nth-of-type(1) {
+    transform: rotate(45deg);
+  }
+
+  &:nth-of-type(2) {
+    opacity: 0;
+  }
+
+  &:nth-of-type(3) {
+    transform: rotate(-45deg);
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+  .sidebar-toggle {
+    display: block;
+  }
+}

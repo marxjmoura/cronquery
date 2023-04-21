@@ -1,0 +1,45 @@
+.sidebar {
+  position: fixed;
+  top: $header-height;
+  left: 0;
+  bottom: 0;
+  width: $nav-width;
+  background-color: $white;
+  overflow-y: auto;
+  z-index: $zindex-fixed;
+  transition: width .2s ease-in-out;
+  background-color: $gray-100;
+
+  ul {
+    list-style-type: none;
+    line-height: 1.8;
+    margin: 2rem 0;
+    padding: 0 2rem;
+    white-space: nowrap;
+
+    li {
+      font-weight: 500;
+      margin-bottom: .75rem;
+
+      a {
+        color: $body-color;
+        font-weight: 400;
+
+        &:hover {
+          color: $primary;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+  .sidebar {
+    width: 0;
+  }
+
+  .sidebar-show .sidebar {
+    width: $nav-width;
+  }
+}

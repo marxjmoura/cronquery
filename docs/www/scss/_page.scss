@@ -1,0 +1,64 @@
+.page {
+  padding-left: $nav-width;
+  padding-top: $header-height;
+
+  .content {
+    line-height: 1.7;
+    padding: 1rem 2rem;
+    max-width: $page-max-width;
+    margin: 0 auto;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 700;
+
+      margin-top: 3rem;
+
+      > a {
+        color: $gray-400;
+        font-size: .9em;
+        font-weight: 400;
+        float: left;
+        margin-left: -.9em;
+        padding-right: .3em;
+        text-decoration: none;
+
+        &:before {
+          content: '#';
+        }
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    table,
+    ul,
+    ol,
+    pre {
+      margin-bottom: 2rem;
+    }
+
+    small {
+      color: $gray-600;
+    }
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+  .page {
+    padding-left: 0;
+  }
+}
