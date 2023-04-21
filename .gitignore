@@ -48,7 +48,7 @@ _UpgradeReport_Files/
 *.ReSharper.*
 
 # system files
-.DS_Store?
+.DS_Store
 Thumbs.db
 
 # package files

@@ -10,7 +10,7 @@ jobs:
     executor: ubuntu
     steps:
       - checkout
-      - run: ./tools/install-dotnet.sh 3.1.201
+      - run: ./tools/install-dotnet.sh 6.0.101
       - run: ./tools/test.sh
       - run: curl -s https://codecov.io/bash > ./codecov
       - run: chmod +x ./codecov
@@ -22,7 +22,7 @@ jobs:
     executor: ubuntu
     steps:
       - checkout
-      - run: ./tools/install-dotnet.sh 3.1.201
+      - run: ./tools/install-dotnet.sh 6.0.101
       - run: dotnet pack src/CronQuery.API/CronQuery.API.csproj -o dist
       - run: dotnet nuget push dist/CronQuery.${CIRCLE_TAG/v/}.nupkg -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
 
