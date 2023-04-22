@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="theme-color" content="#2c3e50"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Marx J. Moura"><meta name="description" content="Lightweight job runner for ASP.NET Core."><meta property="og:title" content="CronQuery"><meta property="og:description" content="Lightweight job runner for ASP.NET Core."><meta property="og:image" content="https://marxjmoura.github.io/cronquery/img/cronquery.jpg"><meta property="og:url" content="https://marxjmoura.github.io/cronquery"><title>CronQuery</title><link rel="icon" type="image/png" href="https://marxjmoura.github.io/cronquery/img/cronquery.png"><link rel="stylesheet" href="https://marxjmoura.github.io/cronquery/docs.min.css"></head><body><header><a href="#" class="sidebar-toggle"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a><a href="https://marxjmoura.github.io/cronquery/"><b>CronQuery</b></a></header><nav class="sidebar"><ul><li><a href="https://marxjmoura.github.io/cronquery/">Quick Start</a></li><li><a href="https://marxjmoura.github.io/cronquery/cron.html">CRON Expressions</a></li><li><a href="https://marxjmoura.github.io/cronquery/versions.html">Versions & Compatibility</a></li></ul></nav><div class="page"><div class="content"><div class="logo"><img src="https://marxjmoura.github.io/cronquery/img/cronquery.png"></div><h1 class="text-center">CronQuery</h1><p class="text-center">CronQuery is an <a href="https://github.com/marxjmoura/cronquery">open source</a> and lightweight job runner for ASP.NET Core.</p><h2 id="installation" class="text-center">Installation</h2><p class="text-center">CronQuery is installed via <a href="https://www.nuget.org/packages/CronQuery">NuGet</a> package.</p><ul class="nav nav-pills justify-content-center"><li class="nav-item"><button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#netCliTab">.NET CLI</button></li><li class="nav-item"><button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#packageManagerTab">Package Manager (Visual Studio)</button></li></ul><div class="tab-content"><div id="netCliTab" class="tab-pane show active" tabindex="0"><pre><code>dotnet add package CronQuery</code></pre></div><div id="packageManagerTab" class="tab-pane" tabindex="0"><pre><code>Install-Package CronQuery</code></pre></div></div><h2 id="creating-jobs" class="text-center">Creating jobs</h2><p class="text-center">Jobs are created by implementing the interface <code>IJob</code>.</p><pre><code>public class MyJob : IJob
+{
+    public async Task RunAsync()
+    {
+        // Do your magic
+    }
+}
+</code></pre><h2 id="registering-jobs" class="text-center">Registering jobs</h2><p class="text-center">Jobs are registered in the <code>Program.cs</code> class.</p><pre><code>using CronQuery.Mvc.DependencyInjection;
+
+var builder &#x3D; WebApplication.CreateBuilder(args);
+
+builder.Services.AddCronQuery(builder.Configuration.GetSection(&quot;CronQuery&quot;));
+
+builder.Services.AddTransient&lt;MyFirstJob&gt;();
+builder.Services.AddTransient&lt;MySecondJob&gt;();
+</code></pre><div class="callout">Jobs are registered using the ASP.NET Core dependency injection. This means that is possible to use dependency injection in your jobs.</div><h2 id="setting-up-jobs" class="text-center">Setting up jobs</h2><p>Schedule your jobs using <a href="https://marxjmoura.github.io/cronquery/cron.html">cron expressions</a> of six fields to a specific timezone (UTC is default). Save the configuration in your appsettings.json like the example below:</p><ul><li><code>MyFirstJob</code> <i>Runs every second on every day, except Sunday.</i></li><li><code>MySecondJob</code> <i>Runs every day at 2:00 A.M.</i></li><li><code>MyThirdJob</code> <i>Runs every second between 2:00 P.M. and 6:59 P.M. only on Saturday every 15 days.</i></li></ul><pre><code>{
+  &quot;CronQuery&quot;: {
+    &quot;Running&quot;: true,
+    &quot;TimeZone&quot;: &quot;E. South America Standard Time&quot;,
+    &quot;Jobs&quot;: [
+      {
+        &quot;Name&quot;: &quot;MyFirstJob&quot;,
+        &quot;Running&quot;: true,
+        &quot;Cron&quot;: &quot;* * * * * 1-6&quot;
+      },
+      {
+        &quot;Name&quot;: &quot;MySecondJob&quot;,
+        &quot;Running&quot;: true,
+        &quot;Cron&quot;: &quot;0 0 2 * * *&quot;
+      },
+      {
+        &quot;Name&quot;: &quot;MyThirdJob&quot;,
+        &quot;Running&quot;: true,
+        &quot;Cron&quot;: &quot;* * 14-18 * * 6/15&quot;
+      }
+    ]
+  }
+}
+</code></pre><p>Whenever you save the appsettings.json CronQuery immediately assumes the new configuration.</p><div class="table-responsive"><table><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody><tr><td><code>CronQuery.Running</code></td><td>Turn on (<code>true</code>) or turn off (<code>false</code>) the CronQuery runner.</td></tr><tr><td><code>CronQuery.TimeZone</code></td><td>System time zone ID or a custom UTC offset, e.g. <code>UTC-03:00</code>, <code>UTC+01:00</code>.</td></tr><tr><td><code>CronQuery.Jobs[].Name</code></td><td>Job class name.</td></tr><tr><td><code>CronQuery.Jobs[].Running</code></td><td>Turn on (<code>true</code>) or turn off (<code>false</code>) the job.</td></tr><tr><td><code>CronQuery.Jobs[].Cron</code></td><td>Cron expression that triggers the job.</td></tr></tbody></table></div><p class="text-center">Your jobs are ready to run. Enjoy! :)</p></div></div><script src="https://marxjmoura.github.io/cronquery/docs.min.js"></script></body></html>
