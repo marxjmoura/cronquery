@@ -5,7 +5,7 @@ const bro = require('gulp-bro')
 const connect = require('gulp-connect')
 const htmlmin = require('gulp-htmlmin')
 const rename = require("gulp-rename")
-const sass = require('gulp-sass')(require('sass'));
+const sass = require('gulp-sass')(require('sass'))
 const uglify = require('gulp-uglify')
 const handlebars = require('./handlebars')
 
