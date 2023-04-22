@@ -1,6 +1,18 @@
-# CronQuery
+<p align="center">
+  <img src="https://marxjmoura.github.io/cronquery/img/cronquery.svg" alt="CronQuery" width="92">
+  <h3 align="center">
+    CronQuery
+  </h3>
+  <p align="center">
+    Lightweight job runner for ASP.NET Core
+    <br>
+    <a href="https://marxjmoura.github.io/cronquery">
+      <strong>Explore CronQuery docs</strong>
+    </a>
+  </p>
+</p>
 
-Lightweight job runner for ASP.NET Core.
+## Status
 
 [![CircleCI](https://circleci.com/gh/marxjmoura/cronquery.svg?style=shield)](https://circleci.com/gh/marxjmoura/cronquery)
 [![codecov](https://codecov.io/gh/marxjmoura/cronquery/branch/master/graph/badge.svg)](https://codecov.io/gh/marxjmoura/cronquery)

@@ -15,9 +15,9 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/marxjmoura/cronquery</RepositoryUrl>
     <PackageId>CronQuery</PackageId>
-    <PackageProjectUrl>https://github.com/marxjmoura/cronquery</PackageProjectUrl>
+    <PackageProjectUrl>https://marxjmoura.github.io/cronquery</PackageProjectUrl>
     <PackageLicense>https://github.com/marxjmoura/cronquery/blob/master/LICENSE</PackageLicense>
-    <PackageReleaseNotes>https://github.com/marxjmoura/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/marxjmoura/cronquery/releases</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>job runner;background tasks;scheduler</PackageTags>
   </PropertyGroup>
