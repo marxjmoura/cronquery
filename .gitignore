@@ -1,0 +1,63 @@
+# project directories
+packages/
+node_modules/
+bin/
+obj/
+temp/
+dist/
+mock/
+wwwroot/
+publish/
+gh-pages/
+Properties/
+Settings/
+TestResults/
+tests/e2e/videos/
+tests/e2e/screenshots/
+coverage/
+
+# log files
+*.log
+*.sqlite
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# compiled source
+*.cache
+*.com
+*.class
+*.dll
+*.dll.config
+*.exe
+*.pdb
+
+# editor directories and files
+.idea
+.vs
+.vscode
+*.ntvs*
+*.njsproj
+*.sln
+*.suo
+*.sw?
+*.user
+UpgradeLog.XML
+_UpgradeReport_Files/
+/_ReSharper.*
+*.ReSharper.*
+
+# system files
+.DS_Store
+Thumbs.db
+
+# package files
+*.nupkg
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip

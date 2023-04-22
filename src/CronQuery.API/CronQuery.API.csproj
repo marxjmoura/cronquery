@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CronQuery</AssemblyName>
+    <AssemblyTitle>CronQuery</AssemblyTitle>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <Authors>Marx J. Moura</Authors>
+    <Owners>Marx J. Moura</Owners>
+    <Copyright>Copyright (c) 2018 Marx J. Moura</Copyright>
+    <Description>Lightweight job runner for ASP.NET Core.</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/marxjmoura/cronquery</RepositoryUrl>
+    <PackageId>CronQuery</PackageId>
+    <PackageProjectUrl>https://github.com/marxjmoura/cronquery</PackageProjectUrl>
+    <PackageLicense>https://github.com/marxjmoura/cronquery/blob/master/LICENSE</PackageLicense>
+    <PackageReleaseNotes>https://github.com/marxjmoura/cronquery/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>job runner;background tasks;scheduler</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
+  </ItemGroup>
+</Project>
