@@ -3,7 +3,7 @@
   top: $header-height;
   left: 0;
   bottom: 0;
-  width: $nav-width;
+  width: $sidebar-width;
   background-color: $white;
   overflow-y: auto;
   z-index: $zindex-fixed;
@@ -13,8 +13,8 @@
   ul {
     list-style-type: none;
     line-height: 1.8;
-    margin: 2rem 0;
-    padding: 0 2rem;
+    margin: $base-spacing 0;
+    padding: 0 $base-spacing;
     white-space: nowrap;
 
     li {
@@ -41,6 +41,6 @@
   }
 
   .sidebar-show .sidebar {
-    width: $nav-width;
+    width: $sidebar-width;
   }
 }

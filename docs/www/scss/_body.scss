@@ -1,3 +1,7 @@
+html {
+  scroll-padding-top: calc($header-height + $base-spacing);
+}
+
 body.sidebar-show {
   overflow: hidden;
 }
