@@ -9,5 +9,5 @@ hljs.registerLanguage('js', js)
 hljs.registerLanguage('json', json)
 
 $('pre code').each(function (i, code) {
-  hljs.highlightBlock(code);
-});
+  hljs.highlightBlock(code)
+})
