@@ -6,19 +6,10 @@ header {
   right: 0;
   display: flex;;
   align-items: center;
+  font-size: 1.3rem;
   padding: 0 1rem;
   height: $header-height;
   border-bottom: $border-width $border-color solid;
   background-color: $white;
   z-index: $zindex-fixed;
-
-  a,
-  a:active,
-  a:hover,
-  a:focus,
-  a:visited {
-    color: $body-color;
-    font-size: 1.3rem;
-    text-decoration: none;
-  }
 }
