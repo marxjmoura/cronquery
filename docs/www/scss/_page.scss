@@ -44,12 +44,16 @@
     h5,
     h6,
     p,
-    table,
     ul,
     ol,
     pre,
-    .callout {
+    .callout,
+    .table-responsive {
       margin-bottom: 2rem;
+    }
+
+    table {
+      margin-bottom: 0;
     }
 
     small {
