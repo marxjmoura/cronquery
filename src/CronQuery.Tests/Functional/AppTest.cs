@@ -24,37 +24,30 @@
 
 namespace CronQuery.Tests.Functional;
 
-using Microsoft.AspNetCore.TestHost;
 using CronQuery.Tests.Fakes;
 using CronQuery.Tests.Fakes.Jobs;
 using Xunit;
 
 public sealed class AppTest
 {
-    private readonly TestServer _server;
-
-    public AppTest()
-    {
-        _server = new TestServer(Program.CreateWebHostBuilder());
-    }
-
     [Fact]
     public async Task Run()
     {
+        var server = TestProgram.CreateServer();
+
         await Task.Delay(1500); // Waiting for the jobs
+        await server.Host.StopAsync();
 
-        await _server.Host.StopAsync();
+        Assert.True(server.Job<JobSuccessful>().Executed);
+        Assert.False(server.Job<JobStopped>().Executed);
 
-        Assert.True(_server.Job<JobSuccessful>().Executed);
-        Assert.False(_server.Job<JobStopped>().Executed);
-
-        Assert.Contains(_server.Logger().Messages, message =>
+        Assert.Contains(server.Logger().Messages, message =>
             message == $"Job '{nameof(JobWithError)}' failed during running.");
 
-        Assert.Contains(_server.Logger().Messages, message =>
+        Assert.Contains(server.Logger().Messages, message =>
             message == $"Job {nameof(JobNotEnqueued)} is not in the queue.");
 
-        Assert.Contains(_server.Logger().Messages, message =>
+        Assert.Contains(server.Logger().Messages, message =>
             message == $"Invalid cron expression for '{nameof(JobBadlyConfigured)}'.");
     }
 }

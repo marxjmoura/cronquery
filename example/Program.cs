@@ -29,8 +29,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-
 builder.Services.AddCronQuery(builder.Configuration.GetSection("CronQuery"));
 
 builder.Services.AddTransient<MyFirstJob>();
@@ -38,7 +36,6 @@ builder.Services.AddTransient<MySecondJob>();
 
 var api = builder.Build();
 
-api.UseRouting();
-api.UseEndpoints(endpoints => endpoints.MapControllers());
+api.MapGet("/", () => "Jobs are running...");
 
 api.Run();
