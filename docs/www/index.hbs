@@ -68,28 +68,35 @@
 
 <p>
   Schedule your jobs using <a href="{{baseUrl}}/cron.html">CRON expressions</a> of six fields to a
-  specific timezone (UTC is default). Save the configuration in your appsettings.json like the example below:
+  specific timezone (UTC is default). Save the configuration in your
+  <code>appsettings.json</code> like the example below:
 </p>
 
-<ul>
-  <li>
-    <code>MyFirstJob</code>
-    <i>Runs every second on every day, except Sunday.</i>
-  </li>
-  <li>
-    <code>MySecondJob</code>
-    <i>Runs every day at 2:00 A.M.</i>
-  </li>
-  <li>
-    <code>MyThirdJob</code>
-    <i>Runs every second between 2:00 P.M. and 6:59 P.M. only on Saturday every 15 days.</i>
-  </li>
-</ul>
+<table>
+  <thead>
+    <th>Job</th>
+    <th>Configuration</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>MyFirstJob</code></td>
+      <td>Runs every second on every day, except Sunday.</td>
+    </tr>
+    <tr>
+      <td><code>MySecondJob</code></td>
+      <td>Runs every day at 2:00 A.M.</td>
+    </tr>
+    <tr>
+      <td><code>MyThirdJob</code></td>
+      <td>Runs every second between 2:00 P.M. and 6:59 P.M. only on Saturday every 15 days.</td>
+    </tr>
+  </tbody>
+</table>
 
 <pre><code>{{ include 'www/snippets/SettingUpJob.json' }}</code></pre>
 
 <p>
-  Whenever you save the appsettings.json CronQuery immediately assumes the new configuration.
+  Whenever you save the <code>appsettings.json</code> CronQuery immediately assumes the new configuration.
 </p>
 
 <div class="table-responsive">
@@ -145,9 +152,10 @@
   </table>
 </div>
 
-<p class="text-center">
-  Your jobs are ready to run. Enjoy! :)
-</p>
+<div class="callout">
+  You can see a full example in the
+  <a href="https://github.com/marxjmoura/cronquery/tree/master/example">GitHub repo</a>.
+</div>
 
 {{/inline}}
 

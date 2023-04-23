@@ -1,9 +1,11 @@
 table {
   @extend .table;
 
-  border-bottom: $border-color $border-width solid;
-
-  thead th {
+  thead tr th {
     border-top: none;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
   }
 }

@@ -106,13 +106,13 @@
         <td class="text-nowrap"><code>L</code> (last)</td>
         <td>Last day of month or last X day of week</td>
         <td>
-          L means 31 for January or day 28 for February (non-leap years)
-          and 5L means <i>"the last Friday of the month"</i>
+          In month L means 31 for January or day 28 for February (non-leap years),
+          in day of week 5L means <i>"the last Friday of the month"</i>
         </td>
       </tr>
       <tr>
         <td class="text-nowrap"><code>W</code> (weekday)</td>
-        <td>Weekday (Monday-Friday) nearest the given day</td>
+        <td>Weekday (Monday to Friday) nearest the given day</td>
         <td>
           If you specify 15W and 15th is a Saturday the trigger fires on Friday the 14th,
           however for 1W and 1th is a Saturday the trigger fires on Monday the 3rd
@@ -171,7 +171,7 @@
   </li>
   <li>
     <code>LW</code> (day of month only):
-    Last weekday (Monday-Friday) of the month.
+    Last weekday (Monday to Friday) of the month.
   </li>
   <li>
     <code>L-00</code> (day of month only):
@@ -192,7 +192,7 @@
 </ul>
 
 <div class="callout">
-  Zero means a numeric parameter that you pass to the expression.
+  Read zero as any numeric value that you pass to the expression.
 </div>
 
 <h2 id="examples" class="text-center">
@@ -200,7 +200,7 @@
 </h2>
 
 <p>
-  The following table shows examples of CRON expressions and their respective meanings.
+  The following table shows some examples of CRON expressions and their respective meanings.
 </p>
 
 <div class="table-responsive">
