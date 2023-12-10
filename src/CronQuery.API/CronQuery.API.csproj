@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>CronQuery</AssemblyName>
     <AssemblyTitle>CronQuery</AssemblyTitle>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
-    <Version>3.0.0</Version>
+    <AssemblyVersion>3.1.0</AssemblyVersion>
+    <Version>3.1.0</Version>
     <Authors>Marx J. Moura</Authors>
     <Owners>Marx J. Moura</Owners>
     <Copyright>Copyright (c) 2018 Marx J. Moura</Copyright>
@@ -23,7 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
-    <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="System.Reactive.Core" Version="6.0.0" />
   </ItemGroup>
 </Project>
